@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public String mCategoryRef = "Categorias/Especies/" + mCategoryTitle;
     private RecyclerView mSpecieList;
 
-    /* Firebase variables */
+    /* Variables de acceso a Firebase */
     FirebaseDatabase database;
     DatabaseReference myRef;
 
