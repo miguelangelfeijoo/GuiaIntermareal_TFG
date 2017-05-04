@@ -1,7 +1,7 @@
 package cardview.firebase.example.com.firebasecardview.model;
 
 public class Specie {
-    String title,description,image;
+    private String title,description,image;
 
     public Specie(String image, String title, String description) {
         this.image = image;
@@ -23,6 +23,7 @@ public class Specie {
     public String getImage() {
         return image;
     }
+
     public void setImage(String image) {
         this.image = image;
     }
