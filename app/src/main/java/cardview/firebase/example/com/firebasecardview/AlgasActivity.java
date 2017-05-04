@@ -1,21 +1,26 @@
 package cardview.firebase.example.com.firebasecardview;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import cardview.firebase.example.com.firebasecardview.MainActivity;
 
-public class AlgasActivity extends AppCompatActivity{
+public class AlgasActivity extends MainActivity{
+
+    private RecyclerView mSpecieList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +35,12 @@ public class AlgasActivity extends AppCompatActivity{
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
     }
 
-
 }
+
+
+

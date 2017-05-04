@@ -1,7 +1,5 @@
 package cardview.firebase.example.com.firebasecardview;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,17 +11,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 
 import cardview.firebase.example.com.firebasecardview.model.Specie;
-
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -68,11 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         FirebaseRecyclerAdapter<Specie, SpecieViewHolder> firebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<Specie, SpecieViewHolder>(
-                        Specie.class,
-                        R.layout.design_row,
-                        SpecieViewHolder.class,
-                        myRef) {
+                new FirebaseRecyclerAdapter<Specie, SpecieViewHolder>(Specie.class, R.layout.design_row, SpecieViewHolder.class, myRef) {
 
                     @Override
                     protected void populateViewHolder(SpecieViewHolder viewHolder, Specie model, int position) {
@@ -104,37 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    //View Holder For Recycler View
-    public static class SpecieViewHolder extends RecyclerView.ViewHolder  {
-        private final Context context;
-        public SpecieViewHolder(View itemView) {
-            super(itemView);
-            context = itemView.getContext();
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                /*Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://es.wikipedia.org/wiki/Alga"));
-                Intent browserChooserIntent = Intent.createChooser(browserIntent , "Choose browser of your choice");
-                v.getContext().startActivity(browserChooserIntent);*/
-                Intent intent = new Intent(context,AlgasActivity.class);
-                context.startActivity(intent);
-                }
-            });
-        }
-
-        public void setTitle(String title){
-            TextView post_title = (TextView)itemView.findViewById(R.id.titleText);
-            post_title.setText(title);
-        }
-        public void setImage(Context ctx , String image){
-            ImageView post_image = (ImageView)itemView.findViewById(R.id.imageViewy);
-            // We Need TO pass Context
-            Picasso.with(ctx).load(image).into(post_image);
-        }
-    }
-
-    /* Navigation menu for species */
+       /* Navigation menu for species */
     @SuppressWarnings("StatementWithEmptyBody")
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.

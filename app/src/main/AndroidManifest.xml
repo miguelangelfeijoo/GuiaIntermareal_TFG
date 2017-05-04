@@ -20,6 +20,10 @@
         <activity
             android:name=".AlgasActivity"
             android:label="@string/title_activity_algas"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SpecieViewHolder"
+            android:label="@string/title_activity_specie_view_holder"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
