@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cardview.firebase.example.com.firebasecardview">
+    package="tfg.uniovi.es.guiaintermareal">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -22,8 +22,8 @@
             android:label="@string/title_activity_algas"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SpecieViewHolder"
-            android:label="@string/title_activity_specie_view_holder"
+            android:name=".SpecieListAdapter"
+            android:label="@string/title_activity_specie_list_adapter"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

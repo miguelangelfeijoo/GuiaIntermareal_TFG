@@ -6,5 +6,5 @@
     <string name="title_activity_algas">Algas</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_specie_view_holder">SpecieViewHolder</string>
+    <string name="title_activity_specie_list_adapter">SpecieListAdapter</string>
 </resources>

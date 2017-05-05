@@ -1,4 +1,4 @@
-package cardview.firebase.example.com.firebasecardview.model;
+package tfg.uniovi.es.guiaintermareal.model;
 
 public class Specie {
     private String title,description,image;

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "24.0.0"
     defaultConfig {
-        applicationId "cardview.firebase.example.com.firebasecardview"
+        applicationId "tfg.uniovi.es.guiaintermareal"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1

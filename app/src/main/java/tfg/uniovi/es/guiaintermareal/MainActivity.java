@@ -1,4 +1,4 @@
-package cardview.firebase.example.com.firebasecardview;
+package tfg.uniovi.es.guiaintermareal;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,8 +16,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import cardview.firebase.example.com.firebasecardview.model.Specie;
-
+import tfg.uniovi.es.guiaintermareal.model.Specie;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -60,11 +58,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseRecyclerAdapter<Specie, SpecieViewHolder> firebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<Specie, SpecieViewHolder>(Specie.class, R.layout.design_row, SpecieViewHolder.class, myRef) {
+        FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder> firebaseRecyclerAdapter =
+                new FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder>(Specie.class, R.layout.design_row, SpecieListAdapter.SpecieViewHolder.class, myRef) {
 
                     @Override
-                    protected void populateViewHolder(SpecieViewHolder viewHolder, Specie model, int position) {
+                    protected void populateViewHolder(SpecieListAdapter.SpecieViewHolder viewHolder, Specie model, int position) {
                         viewHolder.setTitle(model.getTitle());
                         viewHolder.setImage(getApplicationContext(), model.getImage());
                     }
