@@ -1,4 +1,4 @@
-package cardview.firebase.example.com.firebasecardview;
+package tfg.uniovi.es.guiaintermareal;
 
 import org.junit.Test;
 
