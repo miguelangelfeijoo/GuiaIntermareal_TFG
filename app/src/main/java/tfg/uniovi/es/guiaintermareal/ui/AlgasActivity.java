@@ -19,7 +19,6 @@ import tfg.uniovi.es.guiaintermareal.R;
 public class AlgasActivity extends MainActivity {
 
     public TextView vTitle, vDescription;
-    public ImageView vImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,6 @@ public class AlgasActivity extends MainActivity {
 
         vTitle.setText(nombre);
         vDescription.setText(description);
-        //getImageBitmap(imageUrl);
         setImage(getApplicationContext(),imageUrl);
 
     }
