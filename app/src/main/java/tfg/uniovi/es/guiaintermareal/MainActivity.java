@@ -11,23 +11,29 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.List;
 
 import tfg.uniovi.es.guiaintermareal.model.Specie;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     /* Var declaration */
-    public String mCategoryTitle = "Algas y Liquenes";
-    public String mCategoryRef = "Categorias/Especies/" + mCategoryTitle;
-    private RecyclerView mSpecieList;
+    public static String mCategoryTitle = "Algas y Liquenes";
+    public static String mCategoryRef = "Categorias/Especies/" + mCategoryTitle;
+    public RecyclerView mSpecieList;
 
     /* Variables de acceso a Firebase */
     FirebaseDatabase database;
     DatabaseReference myRef;
+
+    public static FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder> firebaseRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +64,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder> firebaseRecyclerAdapter =
+         firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder>(Specie.class, R.layout.design_row, SpecieListAdapter.SpecieViewHolder.class, myRef) {
+
+                    public Specie getModel(Specie model, int position){
+                        return model;
+                    }
 
                     @Override
                     protected void populateViewHolder(SpecieListAdapter.SpecieViewHolder viewHolder, Specie model, int position) {

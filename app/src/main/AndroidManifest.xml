@@ -18,12 +18,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AlgasActivity"
+            android:name=".ui.AlgasActivity"
             android:label="@string/title_activity_algas"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SpecieListAdapter"
             android:label="@string/title_activity_specie_list_adapter"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.AnemonasActivity"
+            android:label="@string/title_activity_anemonas"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.EquinodermosActivity"
+            android:label="@string/title_activity_equinodermos"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.MoluscosActivity"
+            android:label="@string/title_activity_moluscos"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.CrustaceosActivity"
+            android:label="@string/title_activity_crustaceos"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.AnelidosActivity"
+            android:label="@string/title_activity_anelidos"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.PecesActivity"
+            android:label="@string/title_activity_peces"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

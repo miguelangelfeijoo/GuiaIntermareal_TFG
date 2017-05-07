@@ -28,7 +28,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/content_algas" />
+        <include layout="@layout/content_peces" />
 
     </android.support.design.widget.CoordinatorLayout>
 
