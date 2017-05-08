@@ -65,10 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder>(Specie.class, R.layout.design_row, SpecieListAdapter.SpecieViewHolder.class, myRef) {
 
-                    public Specie getModel(Specie model, int position){
-                        return model;
-                    }
-
                     @Override
                     protected void populateViewHolder(SpecieListAdapter.SpecieViewHolder viewHolder, Specie model, int position) {
                         viewHolder.setTitle(model.getTitle());
@@ -106,42 +102,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.algas_y_liquenes) {
+            item.setChecked(true);
             mCategoryTitle = "Algas y Liquenes";
             setCategoryRef("Categorias/Especies/" + mCategoryTitle);
             myRef = database.getReference(getCategoryRef());
             setToolbarTitle();
             onStart();
         } else if (id == R.id.esponjas_anemonas_corales) {
+            item.setChecked(true);
             mCategoryTitle = "Esponjas, Anemonas y Corales";
             setCategoryRef("Categorias/Especies/" + mCategoryTitle);
             myRef = database.getReference(getCategoryRef());
             setToolbarTitle();
             onStart();
         } else if (id == R.id.anelidos) {
+            item.setChecked(true);
             mCategoryTitle = "Anelidos";
             setCategoryRef("Categorias/Especies/" + mCategoryTitle);
             myRef = database.getReference(getCategoryRef());
             setToolbarTitle();
             onStart();
         } else if (id == R.id.moluscos) {
+            item.setChecked(true);
             mCategoryTitle = "Moluscos";
             setCategoryRef("Categorias/Especies/" + mCategoryTitle);
             myRef = database.getReference(getCategoryRef());
             setToolbarTitle();
             onStart();
         } else if (id == R.id.crustaceos) {
+            item.setChecked(true);
             mCategoryTitle = "Crustaceos";
             setCategoryRef("Categorias/Especies/" + mCategoryTitle);
             myRef = database.getReference(getCategoryRef());
             setToolbarTitle();
             onStart();
         } else if (id == R.id.equinodermos) {
+            item.setChecked(true);
             mCategoryTitle = "Equinodermos";
             setCategoryRef("Categorias/Especies/" + mCategoryTitle);
             myRef = database.getReference(getCategoryRef());
             setToolbarTitle();
             onStart();
         } else if (id == R.id.peces) {
+            item.setChecked(true);
             mCategoryTitle = "Peces";
             setCategoryRef("Categorias/Especies/" + mCategoryTitle);
             myRef = database.getReference(getCategoryRef());

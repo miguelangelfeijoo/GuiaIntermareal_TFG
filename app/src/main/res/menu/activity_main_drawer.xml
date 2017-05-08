@@ -3,6 +3,7 @@
 
     <item android:title="Categorias de Especies">
         <menu>
+            <group android:id="@+id/group" android:checkableBehavior="single">
             <item
                 android:id="@+id/algas_y_liquenes"
                 android:icon="@mipmap/algas"
@@ -32,6 +33,7 @@
                 android:icon="@mipmap/peces"
                 android:title="Peces" />
 
+            </group>
         </menu>
     </item>
 </menu>

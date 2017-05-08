@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff4081</color>
     <color name="colorLight">#cce6ff</color>
+    <color name="blackTextColor">#000000</color>
+    <color name="drawerItemSelected">#ff4081</color>
+    <color name="drawerItemNotSelected">#AA3F9F</color>
 </resources>
