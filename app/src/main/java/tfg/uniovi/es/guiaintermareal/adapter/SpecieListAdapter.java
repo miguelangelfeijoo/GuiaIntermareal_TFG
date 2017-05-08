@@ -1,4 +1,4 @@
-package tfg.uniovi.es.guiaintermareal;
+package tfg.uniovi.es.guiaintermareal.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import tfg.uniovi.es.guiaintermareal.MainActivity;
+import tfg.uniovi.es.guiaintermareal.R;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
 import tfg.uniovi.es.guiaintermareal.ui.AlgasActivity;
 import tfg.uniovi.es.guiaintermareal.ui.AnelidosActivity;
@@ -41,16 +43,15 @@ public class SpecieListAdapter extends Activity{
                             intent = new Intent(context, AlgasActivity.class);
                             intent.putExtra("title", sp.getTitle());
                             intent.putExtra("description", sp.getDescription());
+                            intent.putExtra("ecology", sp.getEcology());
                             intent.putExtra("image", sp.getImage());
-                            //System.out.println("*******POSICION: " + getAdapterPosition());
-                            //System.out.println("*******ITEM: " + sp.getTitle());
-                            //System.out.println("*******DESCRIPCION: " + sp.getDescription());
                             break;
 
                         case "Esponjas, Anemonas y Corales":
                             intent = new Intent(context, AnemonasActivity.class);
                             intent.putExtra("title", sp.getTitle());
                             intent.putExtra("description", sp.getDescription());
+                            intent.putExtra("ecology", sp.getEcology());
                             intent.putExtra("image", sp.getImage());
                             break;
 
@@ -58,6 +59,7 @@ public class SpecieListAdapter extends Activity{
                             intent = new Intent(context, CrustaceosActivity.class);
                             intent.putExtra("title", sp.getTitle());
                             intent.putExtra("description", sp.getDescription());
+                            intent.putExtra("ecology", sp.getEcology());
                             intent.putExtra("image", sp.getImage());
                             break;
 
@@ -65,6 +67,7 @@ public class SpecieListAdapter extends Activity{
                             intent = new Intent(context, MoluscosActivity.class);
                             intent.putExtra("title", sp.getTitle());
                             intent.putExtra("description", sp.getDescription());
+                            intent.putExtra("ecology", sp.getEcology());
                             intent.putExtra("image", sp.getImage());
                             break;
 
@@ -72,6 +75,7 @@ public class SpecieListAdapter extends Activity{
                             intent = new Intent(context, EquinodermosActivity.class);
                             intent.putExtra("title", sp.getTitle());
                             intent.putExtra("description", sp.getDescription());
+                            intent.putExtra("ecology", sp.getEcology());
                             intent.putExtra("image", sp.getImage());
                             break;
 
@@ -79,6 +83,7 @@ public class SpecieListAdapter extends Activity{
                             intent = new Intent(context, PecesActivity.class);
                             intent.putExtra("title", sp.getTitle());
                             intent.putExtra("description", sp.getDescription());
+                            intent.putExtra("ecology", sp.getEcology());
                             intent.putExtra("image", sp.getImage());
                             break;
 
@@ -86,6 +91,7 @@ public class SpecieListAdapter extends Activity{
                             intent = new Intent(context, AnelidosActivity.class);
                             intent.putExtra("title", sp.getTitle());
                             intent.putExtra("description", sp.getDescription());
+                            intent.putExtra("ecology", sp.getEcology());
                             intent.putExtra("image", sp.getImage());
                             break;
                     }

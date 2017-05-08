@@ -1,12 +1,13 @@
 package tfg.uniovi.es.guiaintermareal.model;
 
 public class Specie {
-    private String title,description,image;
+    private String title,description,ecology,image;
 
-    public Specie(String image, String title, String description) {
-        this.image = image;
+    public Specie(String title, String description, String ecology, String image) {
         this.title = title;
         this.description = description;
+        this.ecology = ecology;
+        this.image = image;
     }
 
     public Specie() {
@@ -34,6 +35,14 @@ public class Specie {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getEcology() {
+        return ecology;
+    }
+
+    public void setEcology(String ecology) {
+        this.ecology = ecology;
     }
 }
 

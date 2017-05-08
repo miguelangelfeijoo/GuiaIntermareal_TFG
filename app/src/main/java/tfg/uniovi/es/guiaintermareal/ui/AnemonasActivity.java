@@ -21,7 +21,7 @@ import tfg.uniovi.es.guiaintermareal.R;
 
 public class AnemonasActivity extends MainActivity {
 
-    public TextView vTitle, vDescription;
+    public TextView vTitle, vDescription, vEcology;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +40,16 @@ public class AnemonasActivity extends MainActivity {
 
         String nombre = getIntent().getStringExtra("title");
         String description = getIntent().getStringExtra("description");
+        String ecology = getIntent().getStringExtra("ecology");
         String imageUrl = getIntent().getStringExtra("image");
 
         vTitle = (TextView) findViewById(R.id.vTitle);
         vDescription = (TextView) findViewById(R.id.vDescription);
+        vEcology = (TextView) findViewById(R.id.vEcology);
 
         vTitle.setText(nombre);
         vDescription.setText(description);
+        vEcology.setText(ecology);
         setImage(getApplicationContext(),imageUrl);
 
     }
