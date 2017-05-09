@@ -26,12 +26,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static String mCategoryTitle = "Algas y Liquenes";
     public static String mCategoryRef = "Categorias/Especies/" + mCategoryTitle;
     public RecyclerView mSpecieList;
+    public static FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder> firebaseRecyclerAdapter;
+    public static MenuItem rootItem;
 
     /* Variables de acceso a Firebase */
     FirebaseDatabase database;
     DatabaseReference myRef;
-
-    public static FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder> firebaseRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        rootItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
+        rootItem.setChecked(true);
+
         //Recycler View
         mSpecieList = (RecyclerView) findViewById(R.id.specie_list);
         mSpecieList.setHasFixedSize(true);
@@ -62,7 +65,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-         firebaseRecyclerAdapter =
+        setRecyclerAdapter();
+    }
+
+    @Override
+    public void onBackPressed() {
+      DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+      if (drawer.isDrawerOpen(GravityCompat.START)) {
+          drawer.closeDrawer(GravityCompat.START);
+      } else {
+          super.onBackPressed();
+      }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+       /* Navigation menu for species */
+    @SuppressWarnings("StatementWithEmptyBody")
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.algas_y_liquenes) {
+            loadCategoryData("Algas y Liquenes", item);
+        } else if (id == R.id.esponjas_anemonas_corales) {
+            loadCategoryData("Esponjas, Anemonas y Corales", item);
+        } else if (id == R.id.anelidos) {
+            loadCategoryData("Anelidos", item);
+        } else if (id == R.id.moluscos) {
+            loadCategoryData("Moluscos", item);
+        } else if (id == R.id.crustaceos) {
+            loadCategoryData("Crustaceos", item);
+        } else if (id == R.id.equinodermos) {
+            loadCategoryData("Equinodermos", item);
+        } else if (id == R.id.peces) {
+            loadCategoryData("Peces", item);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public void setRecyclerAdapter(){
+        firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder>(Specie.class, R.layout.design_row, SpecieListAdapter.SpecieViewHolder.class, myRef) {
 
                     @Override
@@ -78,83 +128,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    @Override
-    public void onBackPressed() {
-      DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-      if (drawer.isDrawerOpen(GravityCompat.START)) {
-          drawer.closeDrawer(GravityCompat.START);
-      } else {
-          super.onBackPressed();
-      }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-       /* Navigation menu for species */
-    @SuppressWarnings("StatementWithEmptyBody")
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.algas_y_liquenes) {
+    public void loadCategoryData(String title, MenuItem item){
+        if(item.getItemId() != R.id.algas_y_liquenes) {
+            rootItem.setChecked(false);
             item.setChecked(true);
-            mCategoryTitle = "Algas y Liquenes";
-            setCategoryRef("Categorias/Especies/" + mCategoryTitle);
-            myRef = database.getReference(getCategoryRef());
-            setToolbarTitle();
-            onStart();
-        } else if (id == R.id.esponjas_anemonas_corales) {
-            item.setChecked(true);
-            mCategoryTitle = "Esponjas, Anemonas y Corales";
-            setCategoryRef("Categorias/Especies/" + mCategoryTitle);
-            myRef = database.getReference(getCategoryRef());
-            setToolbarTitle();
-            onStart();
-        } else if (id == R.id.anelidos) {
-            item.setChecked(true);
-            mCategoryTitle = "Anelidos";
-            setCategoryRef("Categorias/Especies/" + mCategoryTitle);
-            myRef = database.getReference(getCategoryRef());
-            setToolbarTitle();
-            onStart();
-        } else if (id == R.id.moluscos) {
-            item.setChecked(true);
-            mCategoryTitle = "Moluscos";
-            setCategoryRef("Categorias/Especies/" + mCategoryTitle);
-            myRef = database.getReference(getCategoryRef());
-            setToolbarTitle();
-            onStart();
-        } else if (id == R.id.crustaceos) {
-            item.setChecked(true);
-            mCategoryTitle = "Crustaceos";
-            setCategoryRef("Categorias/Especies/" + mCategoryTitle);
-            myRef = database.getReference(getCategoryRef());
-            setToolbarTitle();
-            onStart();
-        } else if (id == R.id.equinodermos) {
-            item.setChecked(true);
-            mCategoryTitle = "Equinodermos";
-            setCategoryRef("Categorias/Especies/" + mCategoryTitle);
-            myRef = database.getReference(getCategoryRef());
-            setToolbarTitle();
-            onStart();
-        } else if (id == R.id.peces) {
-            item.setChecked(true);
-            mCategoryTitle = "Peces";
-            setCategoryRef("Categorias/Especies/" + mCategoryTitle);
-            myRef = database.getReference(getCategoryRef());
-            setToolbarTitle();
-            onStart();
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        mCategoryTitle = title;
+        setCategoryRef("Categorias/Especies/" + mCategoryTitle);
+        myRef = database.getReference(getCategoryRef());
+        setToolbarTitle();
+        setRecyclerAdapter();
     }
 
     /* Sets category title on Toolbar */
