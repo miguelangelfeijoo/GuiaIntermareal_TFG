@@ -2,14 +2,10 @@ package tfg.uniovi.es.guiaintermareal.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,7 +16,7 @@ import tfg.uniovi.es.guiaintermareal.R;
 
 public class PecesActivity extends MainActivity {
 
-    public TextView vTitle, vDescription, vEcology;
+    private TextView vTitle, vDescription, vEcology;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +49,7 @@ public class PecesActivity extends MainActivity {
 
     }
 
-    public void setImage(Context ctx , String image){
+    private void setImage(Context ctx , String image){
         ImageView vImage = (ImageView)findViewById(R.id.vImage);
         Picasso.with(ctx).load(image).into(vImage);
     }

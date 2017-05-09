@@ -14,8 +14,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/imageDetailHeight"
-        android:layout_marginBottom="@dimen/contentMarginBottom"
-        android:elevation="@dimen/imageElevation">
+        android:layout_marginBottom="@dimen/contentMarginBottom">
 
         <ImageView
             android:id="@+id/vImage"

@@ -17,7 +17,7 @@ import tfg.uniovi.es.guiaintermareal.R;
 
 public class AlgasActivity extends MainActivity {
 
-    public TextView vTitle, vDescription, vEcology;
+    private TextView vTitle, vDescription, vEcology;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class AlgasActivity extends MainActivity {
 
     }
 
-    public void setImage(Context ctx , String image){
+    private void setImage(Context ctx , String image){
         ImageView vImage = (ImageView)findViewById(R.id.vImage);
         Picasso.with(ctx).load(image).into(vImage);
     }

@@ -14,8 +14,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/imageDetailHeight_landscape"
-        android:layout_marginBottom="@dimen/contentMarginBottom"
-        android:elevation="4dp">
+        android:layout_marginBottom="@dimen/contentMarginBottom">
 
         <ImageView
             android:id="@+id/vImage"
@@ -44,9 +43,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:divider="?android:dividerVertical"
+            android:baselineAligned="false"
             android:showDividers="middle">
 
             <LinearLayout
