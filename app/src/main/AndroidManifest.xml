@@ -23,7 +23,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".adapter.SpecieListAdapter"
-            android:label="@string/title_activity_specie_list_adapter"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.AnemonasActivity"

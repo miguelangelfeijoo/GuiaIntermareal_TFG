@@ -1,7 +1,19 @@
 <resources>
     <string name="app_name">Guía Intermareal</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_algas">Algas</string>
+    <string name="full_app_name">Guía de Fauna y Flora Intermareal</string>
+    <string name="university_name">Universidad de Oviedo</string>
+    <string name="navigation_drawer_open">Abrir drawer</string>
+    <string name="navigation_drawer_close">Cerrar drawer</string>
+    <string name="action_settings">Configuración</string>
+
+    <string name="title_activity_algas">Algas y Liquenes</string>
+    <string name="title_activity_anemonas">Esponjas, Anémonas y Corales</string>
+    <string name="title_activity_equinodermos">Equinodermos</string>
+    <string name="title_activity_moluscos">Moluscos</string>
+    <string name="title_activity_crustaceos">Crustáceos</string>
+    <string name="title_activity_anelidos">Anélidos</string>
+    <string name="title_activity_peces">Peces</string>
+
+    <string name="ecologyLabel">Ecología</string>
+    <string name="descriptionLabel">Descripción</string>
 </resources>

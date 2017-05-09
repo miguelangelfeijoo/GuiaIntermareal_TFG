@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:id="@+id/content_algas"
+    android:id="@+id/content_equinodermos"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -13,17 +13,27 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="210dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="@dimen/imageDetailHeight_landscape"
+        android:layout_marginBottom="@dimen/contentMarginBottom"
         android:elevation="4dp">
 
         <ImageView
             android:id="@+id/vImage"
             android:layout_width="match_parent"
-            android:layout_height="210dp"
+            android:layout_height="@dimen/imageDetailHeight_landscape"
             android:scaleType="fitXY"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true" />
+
+        <TextView
+            android:id="@+id/vTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/titleTextSize"
+            android:textColor="@android:color/white"/>
 
     </RelativeLayout>
 
@@ -34,45 +44,58 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:divider="?android:dividerVertical"
+            android:showDividers="middle">
 
-            <TextView
-                android:id="@+id/vTitle"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:textSize="34sp" />
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/contentPadding"
+                android:paddingRight="@dimen/paddingExt"
+                android:paddingBottom="@dimen/paddingExt">
 
-            <TextView
-                android:id="@+id/vDescriptionLabel"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/vDescriptionLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/descriptionLabel"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/subcategoriesTextSize"/>
+
+                <TextView
+                    android:id="@+id/vDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="@string/descriptionLabel"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20sp"/>
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/contentPadding"
+                android:paddingRight="@dimen/paddingExt"
+                android:paddingBottom="@dimen/paddingExt">
 
-            <TextView
-                android:id="@+id/vDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/vEcologyLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ecologyLabel"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/subcategoriesTextSize"/>
 
-            <TextView
-                android:id="@+id/vEcologyLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/ecologyLabel"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/vEcology"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/vEcology"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

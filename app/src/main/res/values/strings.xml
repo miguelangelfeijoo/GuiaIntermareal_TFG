@@ -6,9 +6,8 @@
     <string name="navigation_drawer_close">Cerrar drawer</string>
     <string name="action_settings">Configuración</string>
 
-    <string name="title_activity_specie_list_adapter">SpecieListAdapter</string>
-    <string name="title_activity_algas">Algas</string>
-    <string name="title_activity_anemonas">Anémonas</string>
+    <string name="title_activity_algas">Algas y Liquenes</string>
+    <string name="title_activity_anemonas">Anémonas y Corales</string>
     <string name="title_activity_equinodermos">Equinodermos</string>
     <string name="title_activity_moluscos">Moluscos</string>
     <string name="title_activity_crustaceos">Crustáceos</string>
