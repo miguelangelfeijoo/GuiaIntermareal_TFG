@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        rootItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
-        rootItem.setChecked(true);
+        //rootItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
+        //rootItem.setChecked(true);
 
         //Recycler View
         mSpecieList = (RecyclerView) findViewById(R.id.specie_list);
@@ -129,10 +129,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void loadCategoryData(String title, MenuItem item){
-        if(item.getItemId() != R.id.algas_y_liquenes) {
+        /*if(item.getItemId() != R.id.algas_y_liquenes) {
             rootItem.setChecked(false);
             item.setChecked(true);
-        }
+        }*/
         mCategoryTitle = title;
         setCategoryRef("Categorias/Especies/" + mCategoryTitle);
         myRef = database.getReference(getCategoryRef());
