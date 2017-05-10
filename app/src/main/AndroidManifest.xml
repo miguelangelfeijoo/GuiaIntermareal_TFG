@@ -2,52 +2,32 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tfg.uniovi.es.guiaintermareal">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.INTERNET" />
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/alga"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.AlgasActivity"
-            android:label="@string/title_activity_algas"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".adapter.SpecieListAdapter"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.AnemonasActivity"
-            android:label="@string/title_activity_anemonas"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.EquinodermosActivity"
-            android:label="@string/title_activity_equinodermos"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.MoluscosActivity"
-            android:label="@string/title_activity_moluscos"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.CrustaceosActivity"
-            android:label="@string/title_activity_crustaceos"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.AnelidosActivity"
-            android:label="@string/title_activity_anelidos"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.PecesActivity"
-            android:label="@string/title_activity_peces"
-            android:theme="@style/AppTheme.NoActionBar"/>
-    </application>
+<application android:allowBackup="true" android:icon="@mipmap/alga" android:label="@string/app_name"
+    android:supportsRtl="true" android:theme="@style/AppTheme.NoActionBar">
+    <activity android:name=".SplashActivity" android:label="@string/app_name">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+    <activity android:name=".MainActivity" />
+    <activity android:name=".ui.AlgasActivity" android:label="@string/title_activity_algas"
+        android:theme="@style/AppTheme.NoActionBar" />
+    <activity android:name=".adapter.SpecieListAdapter" android:theme="@style/AppTheme.NoActionBar" />
+    <activity android:name=".ui.AnemonasActivity" android:label="@string/title_activity_anemonas"
+        android:theme="@style/AppTheme.NoActionBar" />
+    <activity android:name=".ui.EquinodermosActivity" android:label="@string/title_activity_equinodermos"
+        android:theme="@style/AppTheme.NoActionBar" />
+    <activity android:name=".ui.MoluscosActivity" android:label="@string/title_activity_moluscos"
+        android:theme="@style/AppTheme.NoActionBar" />
+    <activity android:name=".ui.CrustaceosActivity" android:label="@string/title_activity_crustaceos"
+        android:theme="@style/AppTheme.NoActionBar" />
+    <activity android:name=".ui.AnelidosActivity" android:label="@string/title_activity_anelidos"
+        android:theme="@style/AppTheme.NoActionBar" />
+    <activity android:name=".ui.PecesActivity" android:label="@string/title_activity_peces"
+        android:theme="@style/AppTheme.NoActionBar" />
+</application>
 
 </manifest>
