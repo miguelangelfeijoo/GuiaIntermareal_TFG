@@ -67,7 +67,10 @@ public class MapsActivity extends FragmentActivity implements LocationProvider.L
         double currentLongitude = location.getLongitude();
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
+        //Se crean dos marcadores, uno fijo y otro de la posicion actual
+        mMap.addMarker(new MarkerOptions().position(new LatLng(43.541464, -5.650547)).title("Playa San Lorenzo"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Posicion actual"));
+
         MarkerOptions options = new MarkerOptions()
                 .position(latLng)
                 .title("Estoy aqui!");

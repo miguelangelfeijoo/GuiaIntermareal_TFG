@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -18,10 +17,7 @@ import com.squareup.picasso.Picasso;
 import tfg.uniovi.es.guiaintermareal.MainActivity;
 import tfg.uniovi.es.guiaintermareal.R;
 
-
 public class AlgasActivity extends MainActivity {
-
-    private TextView vTitle, vDescription, vEcology;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +25,8 @@ public class AlgasActivity extends MainActivity {
         setContentView(R.layout.activity_algas);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        TextView vTitle, vDescription, vEcology;
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -42,8 +40,6 @@ public class AlgasActivity extends MainActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Snackbar.make(view, "Se ha avistado esta especie. Añadir marcador al mapa.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
                 Intent i = new Intent(AlgasActivity.this, MapsActivity.class);
                 startActivity(i);
             }
