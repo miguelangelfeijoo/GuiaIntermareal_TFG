@@ -4,7 +4,7 @@
     <string name="university_name">Universidad de Oviedo</string>
     <string name="navigation_drawer_open">Abrir drawer</string>
     <string name="navigation_drawer_close">Cerrar drawer</string>
-    <string name="action_settings">Configuración</string>
+    <string name="action_map">Ver Mapa</string>
 
     <string name="title_activity_algas">Algas y Liquenes</string>
     <string name="title_activity_anemonas">Anémonas y Corales</string>

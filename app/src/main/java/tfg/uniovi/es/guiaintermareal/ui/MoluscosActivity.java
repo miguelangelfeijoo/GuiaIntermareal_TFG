@@ -41,6 +41,8 @@ public class MoluscosActivity extends MainActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MoluscosActivity.this, MapsActivity.class);
+                i.putExtra("ref", mCategoryRef);
+                i.putExtra("title", getIntent().getStringExtra("title"));
                 startActivity(i);
             }
         });
