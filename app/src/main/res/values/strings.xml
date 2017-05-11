@@ -16,4 +16,6 @@
 
     <string name="ecologyLabel">Ecología</string>
     <string name="descriptionLabel">Descripción</string>
- </resources>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_map">MapActivity</string>
+</resources>

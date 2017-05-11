@@ -1,6 +1,7 @@
 package tfg.uniovi.es.guiaintermareal.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -41,8 +42,10 @@ public class AlgasActivity extends MainActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Se ha avistado esta especie. Añadir marcador al mapa.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                /*Snackbar.make(view, "Se ha avistado esta especie. Añadir marcador al mapa.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                Intent i = new Intent(AlgasActivity.this, MapsActivity.class);
+                startActivity(i);
             }
         });
 
