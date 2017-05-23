@@ -15,14 +15,7 @@ import com.squareup.picasso.Picasso;
 import tfg.uniovi.es.guiaintermareal.MainActivity;
 import tfg.uniovi.es.guiaintermareal.R;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
-import tfg.uniovi.es.guiaintermareal.ui.AlgasActivity;
-import tfg.uniovi.es.guiaintermareal.ui.AnelidosActivity;
-import tfg.uniovi.es.guiaintermareal.ui.AnemonasActivity;
 import tfg.uniovi.es.guiaintermareal.ui.CategoryActivity;
-import tfg.uniovi.es.guiaintermareal.ui.CrustaceosActivity;
-import tfg.uniovi.es.guiaintermareal.ui.EquinodermosActivity;
-import tfg.uniovi.es.guiaintermareal.ui.MoluscosActivity;
-import tfg.uniovi.es.guiaintermareal.ui.PecesActivity;
 
 
 public class SpecieListAdapter extends Activity{
@@ -50,64 +43,6 @@ public class SpecieListAdapter extends Activity{
                         intent.putExtra("ecology", sp.getEcology());
                         intent.putExtra("image", sp.getImage());
                     }
-
-                    /*switch (MainActivity.mCategoryTitle){
-                        case "Algas y Liquenes":
-                            intent = new Intent(context, AlgasActivity.class);
-                            intent.putExtra("title", sp.getTitle());
-                            intent.putExtra("description", sp.getDescription());
-                            intent.putExtra("ecology", sp.getEcology());
-                            intent.putExtra("image", sp.getImage());
-                            break;
-
-                        case "Esponjas, Anemonas y Corales":
-                            intent = new Intent(context, AnemonasActivity.class);
-                            intent.putExtra("title", sp.getTitle());
-                            intent.putExtra("description", sp.getDescription());
-                            intent.putExtra("ecology", sp.getEcology());
-                            intent.putExtra("image", sp.getImage());
-                            break;
-
-                        case "Crustaceos":
-                            intent = new Intent(context, CrustaceosActivity.class);
-                            intent.putExtra("title", sp.getTitle());
-                            intent.putExtra("description", sp.getDescription());
-                            intent.putExtra("ecology", sp.getEcology());
-                            intent.putExtra("image", sp.getImage());
-                            break;
-
-                        case "Moluscos":
-                            intent = new Intent(context, MoluscosActivity.class);
-                            intent.putExtra("title", sp.getTitle());
-                            intent.putExtra("description", sp.getDescription());
-                            intent.putExtra("ecology", sp.getEcology());
-                            intent.putExtra("image", sp.getImage());
-                            break;
-
-                        case "Equinodermos":
-                            intent = new Intent(context, EquinodermosActivity.class);
-                            intent.putExtra("title", sp.getTitle());
-                            intent.putExtra("description", sp.getDescription());
-                            intent.putExtra("ecology", sp.getEcology());
-                            intent.putExtra("image", sp.getImage());
-                            break;
-
-                        case "Peces":
-                            intent = new Intent(context, PecesActivity.class);
-                            intent.putExtra("title", sp.getTitle());
-                            intent.putExtra("description", sp.getDescription());
-                            intent.putExtra("ecology", sp.getEcology());
-                            intent.putExtra("image", sp.getImage());
-                            break;
-
-                        case "Anelidos":
-                            intent = new Intent(context, AnelidosActivity.class);
-                            intent.putExtra("title", sp.getTitle());
-                            intent.putExtra("description", sp.getDescription());
-                            intent.putExtra("ecology", sp.getEcology());
-                            intent.putExtra("image", sp.getImage());
-                            break;
-                    }*/
 
                     context.startActivity(intent);
                 }
