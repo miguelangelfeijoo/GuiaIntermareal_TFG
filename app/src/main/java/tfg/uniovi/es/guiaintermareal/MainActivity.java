@@ -1,5 +1,6 @@
 package tfg.uniovi.es.guiaintermareal;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,11 +12,24 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import tfg.uniovi.es.guiaintermareal.adapter.SpecieListAdapter;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
@@ -24,42 +38,169 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /* Var declaration */
     public static String mCategoryTitle = "Algas y Liquenes";
-    public static String mCategoryRef = "Categorias/Especies/" + mCategoryTitle;
+    public static String mCategoryRef = "Categorias/Especies/";
     public RecyclerView mSpecieList;
     public static FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder> firebaseRecyclerAdapter;
-    public static MenuItem rootItem;
+
+    View view_Group;
+    private DrawerLayout mDrawerLayout;
+    ExpandableListAdapter mMenuAdapter;
+    ExpandableListView expandableList;
+    List<String> listDataHeader;
+    List<Object> listChildValues;
+    HashMap<String, List<String>> listDataChild;
 
     /* Variables de acceso a Firebase */
     FirebaseDatabase database;
-    DatabaseReference myRef;
+    DatabaseReference myRef, rootRef;
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            expandableList.setIndicatorBounds(expandableList.getRight()- 80, expandableList.getWidth());
+        } else {
+            expandableList.setIndicatorBoundsRelative(expandableList.getRight()- 80, expandableList.getWidth());
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(mCategoryTitle);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        expandableList = (ExpandableListView) findViewById(R.id.navigationmenu);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
 
-        //rootItem = navigationView.getMenu().getItem(0).getSubMenu().getItem(0);
-        //rootItem.setChecked(true);
+        if (navigationView != null) {
+            setupDrawerContent(navigationView);
+        }
+        // Send a Query to the database
+        database = FirebaseDatabase.getInstance();
+        rootRef = database.getReference().child("Categorias").child("Especies");
+        myRef = rootRef.child(mCategoryTitle);
+        rootRef.keepSynced(true);
+
+
+        // ***** CARGAMOS LOS DATOS DEL DRAWER ******
+        prepareDrawerListData();
+
+        mMenuAdapter = new tfg.uniovi.es.guiaintermareal.adapter.ExpandableListAdapter(this, listDataHeader, listDataChild);
+        expandableList.setAdapter(mMenuAdapter);
+
+        expandableList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView expandableListView,
+                                        View view,
+                                        int groupPosition,
+                                        int childPosition, long id) {
+               Toast.makeText(MainActivity.this,
+                        "Header: "+String.valueOf(expandableListView.getItemAtPosition(groupPosition)) +
+                                "\nItem: "+ String.valueOf(childPosition), Toast.LENGTH_SHORT).show();
+
+                //String hijo = listDataChild.get(String.valueOf(expandableListView.getItemAtPosition(groupPosition))).get(childPosition);
+                //System.out.println("LISTDATACHILD: " + hijo);
+
+                view.setSelected(true);
+                if (view_Group != null) {
+                    view_Group.setBackgroundColor(Color.parseColor("#ffffff"));
+                }
+                expandableListView.collapseGroup(groupPosition);
+                drawer.closeDrawers();
+                return false;
+
+            }
+        });
+        expandableList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long id) {
+                System.out.println("****ITEM: " + String.valueOf(expandableListView.getItemAtPosition(groupPosition)));
+                int count = expandableListView.getCount();
+                if (expandableListView.isGroupExpanded(groupPosition)){
+                       //Colapsado
+                    System.out.println("ESTOY COLAPSADO?");
+                }else {
+                    //Expandido
+                    System.out.println("ESTOY EXPANDIDO?");
+                    for (int c = 0; c < count; c++) {
+                        loadCategoryData(String.valueOf(expandableListView.getItemAtPosition(groupPosition)));
+                    }
+                }
+                return false;
+            }
+        });
 
         //Recycler View
         mSpecieList = (RecyclerView) findViewById(R.id.specie_list);
         mSpecieList.setHasFixedSize(true);
         mSpecieList.setLayoutManager(new LinearLayoutManager(this));
+    }
 
-        // Send a Query to the database
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference(getCategoryRef());
+    private void prepareDrawerListData() {
+        listDataHeader = new ArrayList<String>();
+        listChildValues = new ArrayList<Object>();
+        listDataChild = new HashMap<String, List<String>>();
 
+        rootRef.addValueEventListener(  new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int pos = 0;
+                listDataHeader.clear();
+                listDataChild.clear();
+                for(DataSnapshot dsp : dataSnapshot.getChildren()){
+                    listDataHeader.add(dsp.getKey());
+                    collectChild((Map<String, Object>) dsp.getValue());
+                    List<String> heading = new ArrayList<String>();
+                    for (DataSnapshot d : dsp.getChildren()) {
+                        heading.add(d.getKey());
+                    }
+                    listDataChild.put(listDataHeader.get(pos), heading);// Header, Child data
+                    pos++;
+                    expandableList.setAdapter(mMenuAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void collectChild(Map<String, Object> species){
+        ArrayList<String> speciesCategory = new ArrayList<>();
+        for(Map.Entry<String, Object> entry : species.entrySet()){
+            Map categoryName = (Map) entry.getValue();
+            speciesCategory.add((String) categoryName.get("title"));
+        }
+
+        //System.out.println(speciesCategory.toString());
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
     }
 
     @Override
@@ -90,20 +231,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        System.out.println("***ITEM ID: " + id);
+
         if (id == R.id.algas_y_liquenes) {
-            loadCategoryData("Algas y Liquenes", item);
+            loadCategoryData("Algas y Liquenes");
         } else if (id == R.id.esponjas_anemonas_corales) {
-            loadCategoryData("Esponjas, Anemonas y Corales", item);
+            loadCategoryData("Esponjas, Anemonas y Corales");
         } else if (id == R.id.anelidos) {
-            loadCategoryData("Anelidos", item);
+            loadCategoryData("Anelidos");
         } else if (id == R.id.moluscos) {
-            loadCategoryData("Moluscos", item);
+            loadCategoryData("Moluscos");
         } else if (id == R.id.crustaceos) {
-            loadCategoryData("Crustaceos", item);
+            loadCategoryData("Crustaceos");
         } else if (id == R.id.equinodermos) {
-            loadCategoryData("Equinodermos", item);
+            loadCategoryData("Equinodermos");
         } else if (id == R.id.peces) {
-            loadCategoryData("Peces", item);
+            loadCategoryData("Peces");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -128,11 +271,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    public void loadCategoryData(String title, MenuItem item){
-        /*if(item.getItemId() != R.id.algas_y_liquenes) {
-            rootItem.setChecked(false);
-            item.setChecked(true);
-        }*/
+    public void loadCategoryData(String title){
         mCategoryTitle = title;
         setCategoryRef("Categorias/Especies/" + mCategoryTitle);
         myRef = database.getReference(getCategoryRef());

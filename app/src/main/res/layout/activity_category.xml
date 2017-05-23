@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="tfg.uniovi.es.guiaintermareal.MainActivity">
+        tools:context="tfg.uniovi.es.guiaintermareal.ui.CategoryActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -25,11 +25,12 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@mipmap/background_drawer"/>
+                android:background="@mipmap/background_drawer"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/content_main" />
+        <include layout="@layout/content_category" />
 
     </android.support.design.widget.CoordinatorLayout>
 
@@ -39,26 +40,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_main" >
-
-        <ExpandableListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:layout_marginTop="160dp"
-            android:choiceMode="singleChoice"
-            android:id="@+id/navigationmenu">
-        </ExpandableListView>
-
-    </android.support.design.widget.NavigationView>
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
-
-
-
-
-
-
-
-
-
