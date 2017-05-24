@@ -20,4 +20,6 @@
     <string name="title_activity_map">MapActivity</string>
     <string name="category">Categorias</string>
     <string name="identificar_especie">Identificar especie</string>
+
+    <string name="msg">Esta aplicación necesita permisos para su funcionamiento.</string>
 </resources>

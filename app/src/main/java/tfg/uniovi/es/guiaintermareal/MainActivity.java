@@ -1,7 +1,6 @@
 package tfg.uniovi.es.guiaintermareal;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +24,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,12 +32,14 @@ import java.util.Map;
 
 import tfg.uniovi.es.guiaintermareal.adapter.SpecieListAdapter;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
+import tfg.uniovi.es.guiaintermareal.ui.RuntimePermission;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends RuntimePermission implements NavigationView.OnNavigationItemSelectedListener {
 
     /* Var declaration */
     public static String mCategoryTitle = "Algas y Liquenes";
     public static String mCategoryRef = "Categorias/Especies/";
+    private static final int REQUEST_PERMISSION = 10;
 
     public RecyclerView mSpecieList;
     public static FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder> firebaseRecyclerAdapter;
@@ -76,6 +76,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(mCategoryTitle);
+
+        requestAppPermissions(new String[]{
+                        android.Manifest.permission.CAMERA,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                R.string.msg,REQUEST_PERMISSION);
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         expandableList = (ExpandableListView) findViewById(R.id.navigationmenu);
@@ -293,6 +298,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     public void setCategoryRef(String ref){
         mCategoryRef = ref;
+    }
+
+    public void onPermissionsGranted(int requestCode) {
+        //Do anything when permisson granted
+        Toast.makeText(getApplicationContext(), "Permisos condedido!", Toast.LENGTH_LONG).show();
     }
 
 }
