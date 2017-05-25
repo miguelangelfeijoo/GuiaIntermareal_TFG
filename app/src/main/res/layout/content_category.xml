@@ -35,7 +35,7 @@
             android:textColor="@android:color/white"/>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/identify"
+            android:id="@+id/fab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:srcCompat="@android:drawable/ic_menu_camera"

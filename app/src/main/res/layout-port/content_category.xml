@@ -1,39 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:orientation="vertical"
-android:id="@+id/content_algas"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-app:layout_behavior="@string/appbar_scrolling_view_behavior"
-tools:context="tfg.uniovi.es.guiaintermareal.ui.CategoryActivity"
-tools:showIn="@layout/activity_category">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/content_category"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="tfg.uniovi.es.guiaintermareal.ui.CategoryActivity"
+    tools:showIn="@layout/activity_category">
 
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="232dp"
-    android:layout_marginBottom="@dimen/contentMarginBottom">
+    android:layout_height="@dimen/imageDetailHeight">
 
     <ImageView
         android:id="@+id/vImage"
         android:layout_width="match_parent"
         android:layout_height="@dimen/imageDetailHeight"
+        android:paddingTop="40dp"
         android:scaleType="fitXY"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/identify"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_menu_camera"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginEnd="13dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
 
@@ -46,7 +35,10 @@ tools:showIn="@layout/activity_category">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/contentPadding">
+        android:paddingTop="8dp"
+        android:paddingLeft="@dimen/contentPadding"
+        android:paddingRight="@dimen/contentPadding"
+        android:paddingBottom="@dimen/contentPadding">
 
         <TextView
             android:id="@+id/vTitle"

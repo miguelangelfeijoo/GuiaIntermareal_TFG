@@ -14,11 +14,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,13 +37,14 @@ import java.util.Date;
 import tfg.uniovi.es.guiaintermareal.MainActivity;
 import tfg.uniovi.es.guiaintermareal.R;
 
-public class CategoryActivity extends MainActivity{
+public class CategoryActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private ProgressDialog mProgressDialog;
     public StorageReference mStorage;
     Uri picUri;
     String nombre, description, imageUrl, taxonomy, ecology, habitat;
+    private FABToolbarLayout morph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +61,8 @@ public class CategoryActivity extends MainActivity{
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //navigationView.setNavigationItemSelectedListener(MainActivity.class);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,8 +76,20 @@ public class CategoryActivity extends MainActivity{
         });*/
 
         mProgressDialog = new ProgressDialog(this);
-        FloatingActionButton identify = (FloatingActionButton) findViewById(R.id.identify);
-        identify.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        morph = (FABToolbarLayout) findViewById(R.id.fabtoolbar);
+
+        View gallery, photo, map;
+        gallery = findViewById(R.id.gallery);
+        photo = findViewById(R.id.photo);
+        map = findViewById(R.id.map);
+
+        fab.setOnClickListener(this);
+        gallery.setOnClickListener(this);
+        photo.setOnClickListener(this);
+        map.setOnClickListener(this);
+
+        /*identify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -84,9 +100,9 @@ public class CategoryActivity extends MainActivity{
                 startActivityForResult(i, REQUEST_IMAGE_CAPTURE);
                 /*Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);*/
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
             }
-        });
+        });*/
 
         nombre = getIntent().getStringExtra("title");
         description = getIntent().getStringExtra("description");
@@ -107,6 +123,14 @@ public class CategoryActivity extends MainActivity{
         vTaxonomy.setText(taxonomy);
         vHabitat.setText(habitat);
         setImage(getApplicationContext(),imageUrl);
+    }
+
+    @Override
+    public void onClick(View v){
+        if(v.getId() == R.id.fab){
+            morph.show();
+        }
+        morph.hide();
     }
 
     @Override
