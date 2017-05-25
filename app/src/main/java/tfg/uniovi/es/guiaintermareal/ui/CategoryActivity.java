@@ -37,9 +37,12 @@ import java.util.Date;
 import tfg.uniovi.es.guiaintermareal.MainActivity;
 import tfg.uniovi.es.guiaintermareal.R;
 
+import static tfg.uniovi.es.guiaintermareal.MainActivity.mRootRef;
+
 public class CategoryActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final int REQUEST_IMAGE_CAPTURE = 2;
+    private static String TOOLBAR_ACTION_TYPE = "";
     private ProgressDialog mProgressDialog;
     public StorageReference mStorage;
     Uri picUri;
@@ -79,14 +82,14 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         morph = (FABToolbarLayout) findViewById(R.id.fabtoolbar);
 
-        View gallery, photo, map;
+        View gallery, camera, map;
         gallery = findViewById(R.id.gallery);
-        photo = findViewById(R.id.photo);
+        camera = findViewById(R.id.camera);
         map = findViewById(R.id.map);
 
         fab.setOnClickListener(this);
         gallery.setOnClickListener(this);
-        photo.setOnClickListener(this);
+        camera.setOnClickListener(this);
         map.setOnClickListener(this);
 
         /*identify.setOnClickListener(new View.OnClickListener() {
@@ -127,9 +130,39 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v){
-        if(v.getId() == R.id.fab){
-            morph.show();
+        Intent intent;
+        switch (v.getId()) {
+            case R.id.fab:
+                morph.show();
+                break;
+
+            case R.id.camera:
+                intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                TOOLBAR_ACTION_TYPE = "camera";
+                File file=getOutputMediaFile(1);
+                picUri = Uri.fromFile(file); // create
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,picUri); // set the image file
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                break;
+
+            case R.id.gallery:
+                intent = new Intent(Intent.ACTION_PICK);
+                TOOLBAR_ACTION_TYPE = "gallery";
+                intent.setType("image/*");
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                break;
+
+            case R.id.map:
+                intent = new Intent(CategoryActivity.this, MapsActivity.class);
+
+                intent.putExtra("ref", mRootRef);
+                intent.putExtra("title", getIntent().getStringExtra("title"));
+                startActivity(intent);
+                break;
         }
+/*        if(v.getId() == R.id.fab){
+            morph.show();
+        }*/
         morph.hide();
     }
 
@@ -137,26 +170,44 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (networkConnected(getApplicationContext())) {
-            //Captura de foto
             if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
                 mProgressDialog.setMessage("Subiendo archivo...");
                 mProgressDialog.show();
-
-                //La conexion esta habilitada
-                Uri uri = picUri;
-                StorageReference filepath = mStorage.child("A confirmar").child(nombre).child(uri.getLastPathSegment());
-                filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(CategoryActivity.this, "Imagen subida con exito!", Toast.LENGTH_LONG).show();
-                        mProgressDialog.dismiss();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(CategoryActivity.this, "Ha habido un fallo al subir la imagen!!", Toast.LENGTH_LONG).show();
-                    }
-                });
+                Uri uri;
+                System.out.println("******FLAG: "+getIntent().getStringExtra("type"));
+                if(TOOLBAR_ACTION_TYPE == "gallery") {
+                    //La imagen se obtiene de la galeria
+                    uri = data.getData();
+                    StorageReference filepath = mStorage.child("A confirmar").child(nombre).child(uri.getLastPathSegment());
+                    filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(CategoryActivity.this, "Imagen subida con exito!", Toast.LENGTH_LONG).show();
+                            mProgressDialog.dismiss();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(CategoryActivity.this, "Ha habido un fallo al subir la imagen!!", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }else{
+                    //La imagen se obtiene de la camara
+                    uri = picUri;
+                    StorageReference filepath = mStorage.child("A confirmar").child(nombre).child(uri.getLastPathSegment());
+                    filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(CategoryActivity.this, "Imagen subida con exito!", Toast.LENGTH_LONG).show();
+                            mProgressDialog.dismiss();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(CategoryActivity.this, "Ha habido un fallo al subir la imagen!!", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
             }
         }else{
             mProgressDialog.dismiss();
