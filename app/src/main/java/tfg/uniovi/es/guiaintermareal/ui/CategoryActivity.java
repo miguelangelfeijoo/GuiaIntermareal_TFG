@@ -40,6 +40,7 @@ public class CategoryActivity extends MainActivity{
     private ProgressDialog mProgressDialog;
     public StorageReference mStorage;
     Uri picUri;
+    String nombre, description, imageUrl, taxonomy, ecology, habitat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +88,12 @@ public class CategoryActivity extends MainActivity{
             }
         });
 
-        String nombre = getIntent().getStringExtra("title");
-        String description = getIntent().getStringExtra("description");
-        String ecology = getIntent().getStringExtra("ecology");
-        String imageUrl = getIntent().getStringExtra("image");
-        String taxonomy = getIntent().getStringExtra("taxonomy");
-        String habitat = getIntent().getStringExtra("habitat");
+        nombre = getIntent().getStringExtra("title");
+        description = getIntent().getStringExtra("description");
+        ecology = getIntent().getStringExtra("ecology");
+        imageUrl = getIntent().getStringExtra("image");
+        taxonomy = getIntent().getStringExtra("taxonomy");
+        habitat = getIntent().getStringExtra("habitat");
 
         vTitle = (TextView) findViewById(R.id.vTitle);
         vDescription = (TextView) findViewById(R.id.vDescription);
@@ -119,7 +120,7 @@ public class CategoryActivity extends MainActivity{
 
                 //La conexion esta habilitada
                 Uri uri = picUri;
-                StorageReference filepath = mStorage.child("Identificame").child(uri.getLastPathSegment());
+                StorageReference filepath = mStorage.child("A confirmar").child(nombre).child(uri.getLastPathSegment());
                 filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
