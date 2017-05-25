@@ -48,7 +48,7 @@ public class CategoryActivity extends MainActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TextView vTitle, vDescription, vEcology;
+        TextView vTitle, vDescription, vEcology, vTaxonomy, vHabitat;
         mStorage = FirebaseStorage.getInstance().getReference();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -64,7 +64,7 @@ public class CategoryActivity extends MainActivity{
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(CategoryActivity.this, MapsActivity.class);
-                i.putExtra("ref", mCategoryRef);
+                i.putExtra("ref", mRootRef);
                 i.putExtra("title", getIntent().getStringExtra("title"));
                 startActivity(i);
             }
@@ -91,14 +91,20 @@ public class CategoryActivity extends MainActivity{
         String description = getIntent().getStringExtra("description");
         String ecology = getIntent().getStringExtra("ecology");
         String imageUrl = getIntent().getStringExtra("image");
+        String taxonomy = getIntent().getStringExtra("taxonomy");
+        String habitat = getIntent().getStringExtra("habitat");
 
         vTitle = (TextView) findViewById(R.id.vTitle);
         vDescription = (TextView) findViewById(R.id.vDescription);
         vEcology = (TextView) findViewById(R.id.vEcology);
+        vTaxonomy = (TextView) findViewById(R.id.vTaxonomy);
+        vHabitat = (TextView) findViewById(R.id.vHabitat);
 
         vTitle.setText(nombre);
         vDescription.setText(description);
         vEcology.setText(ecology);
+        vTaxonomy.setText(taxonomy);
+        vHabitat.setText(habitat);
         setImage(getApplicationContext(),imageUrl);
     }
 
@@ -106,7 +112,6 @@ public class CategoryActivity extends MainActivity{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (networkConnected(getApplicationContext())) {
-            System.out.println("***** CONECTADO *****");
             //Captura de foto
             if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
                 mProgressDialog.setMessage("Subiendo archivo...");
@@ -129,7 +134,6 @@ public class CategoryActivity extends MainActivity{
                 });
             }
         }else{
-            System.out.println("***** NO CONECTADO *****");
             mProgressDialog.dismiss();
             Toast.makeText(CategoryActivity.this, "Es necesario tener conexion a Internet para subir la foto!!", Toast.LENGTH_LONG).show();
         }
@@ -146,7 +150,7 @@ public class CategoryActivity extends MainActivity{
     /** Create a File for saving an image */
     private  File getOutputMediaFile(int type){
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "GuiaIntermareal_TFG");
+                Environment.DIRECTORY_PICTURES), "GuiaIntermareal");
 
         /**Create the storage directory if it does not exist*/
         if (! mediaStorageDir.exists()){

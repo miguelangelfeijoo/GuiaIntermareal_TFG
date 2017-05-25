@@ -8,6 +8,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -18,12 +22,13 @@ import tfg.uniovi.es.guiaintermareal.model.Specie;
 import tfg.uniovi.es.guiaintermareal.ui.CategoryActivity;
 
 
-public class SpecieListAdapter extends Activity{
+public class SpecieListAdapter extends Activity {
 
     //View Holder For Recycler View
     public static class SpecieViewHolder extends RecyclerView.ViewHolder  {
         private final Context context;
         private int count;
+        DatabaseReference ref;
 
         public SpecieViewHolder(final View itemView) {
             super(itemView);
@@ -32,19 +37,44 @@ public class SpecieListAdapter extends Activity{
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = null;
-                    Specie sp = MainActivity.firebaseRecyclerAdapter.getItem(getAdapterPosition());
                     count = MainActivity.firebaseRecyclerAdapter.getItemCount();
+                    ref = MainActivity.firebaseRecyclerAdapter.getRef(0);
+                    System.out.println("****REF SLA: " + ref);
+                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    for (int i = 0; i < count; i++){
-                        intent = new Intent(context, CategoryActivity.class);
-                        intent.putExtra("title", sp.getTitle());
-                        intent.putExtra("description", sp.getDescription());
-                        intent.putExtra("ecology", sp.getEcology());
-                        intent.putExtra("image", sp.getImage());
-                    }
+                                System.out.println("*******SUBCATEGORY: "+dataSnapshot.child("subcategory"));
+                                if(dataSnapshot.child("subcategory").getValue() != null ){
+                                    //ES SUBCATEGORIA
+                                    Specie sp = MainActivity.firebaseRecyclerAdapter.getItem(getAdapterPosition());
+                                    System.out.println("******ESPECIE: "+sp.getTitle());
+                                    //loadCategoryData(String.valueOf(sp.getTitle()));
 
-                    context.startActivity(intent);
+                                }else{
+                                    //NO ES SUBCATEGORIA
+                                    Intent intent = null;
+                                    Specie sp = MainActivity.firebaseRecyclerAdapter.getItem(getAdapterPosition());
+                                    for (int i = 0; i < count; i++){
+                                        intent = new Intent(context, CategoryActivity.class);
+                                        intent.putExtra("title", sp.getTitle());
+                                        intent.putExtra("description", sp.getDescription());
+                                        intent.putExtra("ecology", sp.getEcology());
+                                        intent.putExtra("image", sp.getImage());
+                                        intent.putExtra("habitat", sp.getHabitat());
+                                        intent.putExtra("taxonomy", sp.getTaxonomy());
+                                    }
+                                    context.startActivity(intent);
+                                }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
                 }
             });
         }

@@ -22,4 +22,6 @@
     <string name="identificar_especie">Identificar especie</string>
 
     <string name="msg">Esta aplicación necesita permisos para su funcionamiento.</string>
+    <string name="habitatLabel">Habitat</string>
+    <string name="taxonomyLabel">Taxonomia</string>
 </resources>

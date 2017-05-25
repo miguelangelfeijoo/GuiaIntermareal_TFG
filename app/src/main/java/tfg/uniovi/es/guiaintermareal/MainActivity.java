@@ -38,7 +38,7 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
 
     /* Var declaration */
     public static String mCategoryTitle = "Algas y Liquenes";
-    public static String mCategoryRef = "Categorias/Especies/";
+    public static String mRootRef = "Categorias/";
     private static final int REQUEST_PERMISSION = 10;
 
     public RecyclerView mSpecieList;
@@ -55,6 +55,8 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
     /* Variables de acceso a Firebase */
     FirebaseDatabase database;
     DatabaseReference myRef, rootRef;
+
+    //**************************************************************************************************
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -98,7 +100,7 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
         }
         // Send a Query to the database
         database = FirebaseDatabase.getInstance();
-        rootRef = database.getReference().child("Categorias").child("Especies");
+        rootRef = database.getReference().child("Categorias");
         myRef = rootRef.child(mCategoryTitle);
         rootRef.keepSynced(true);
 
@@ -135,14 +137,11 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
         expandableList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long id) {
-                System.out.println("****ITEM: " + String.valueOf(expandableListView.getItemAtPosition(groupPosition)));
                 int count = expandableListView.getCount();
                 if (expandableListView.isGroupExpanded(groupPosition)){
                        //Colapsado
-                    System.out.println("ESTOY COLAPSADO?");
                 }else {
                     //Expandido
-                    System.out.println("ESTOY EXPANDIDO?");
                     for (int c = 0; c < count; c++) {
                         loadCategoryData(String.valueOf(expandableListView.getItemAtPosition(groupPosition)));
                     }
@@ -170,7 +169,7 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
                 listDataChild.clear();
                 for(DataSnapshot dsp : dataSnapshot.getChildren()){
                     listDataHeader.add(dsp.getKey());
-                    collectChild((Map<String, Object>) dsp.getValue());
+                    //collectChild((Map<String, Object>) dsp.getValue());
                     List<String> heading = new ArrayList<String>();
                     for (DataSnapshot d : dsp.getChildren()) {
                         heading.add(d.getKey());
@@ -236,26 +235,6 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
     @SuppressWarnings("StatementWithEmptyBody")
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        System.out.println("***ITEM ID: " + id);
-
-        if (id == R.id.algas_y_liquenes) {
-            loadCategoryData("Algas y Liquenes");
-        } else if (id == R.id.esponjas_anemonas_corales) {
-            loadCategoryData("Esponjas, Anemonas y Corales");
-        } else if (id == R.id.anelidos) {
-            loadCategoryData("Anelidos");
-        } else if (id == R.id.moluscos) {
-            loadCategoryData("Moluscos");
-        } else if (id == R.id.crustaceos) {
-            loadCategoryData("Crustaceos");
-        } else if (id == R.id.equinodermos) {
-            loadCategoryData("Equinodermos");
-        } else if (id == R.id.peces) {
-            loadCategoryData("Peces");
-        }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -271,7 +250,6 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
                         viewHolder.setImage(getApplicationContext(), model.getImage());
                     }
                 };
-
         mSpecieList.getRecycledViewPool().clear();
         mSpecieList.stopScroll();
         mSpecieList.setAdapter(firebaseRecyclerAdapter);
@@ -280,8 +258,28 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
 
     public void loadCategoryData(String title){
         mCategoryTitle = title;
-        setCategoryRef("Categorias/Especies/" + mCategoryTitle);
-        myRef = database.getReference(getCategoryRef());
+        setRootRef("Categorias/" + mCategoryTitle);
+        myRef = database.getReference(getRootRef());
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dsp : dataSnapshot.getChildren()){
+                    //Aqui salen Cefalopodos, Bivalvos, Quitones y Caracoles en el dsp
+                    //System.out.println("*******SUBCATEGORY: "+dsp.child("subcategory"));
+                    if(dsp.child("subcategory").getValue() != null ){
+                        //ES SUBCATEGORIA
+                    }else{
+                        //NO ES SUBCATEGORIA
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         setToolbarTitle();
         setRecyclerAdapter();
     }
@@ -293,11 +291,11 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
     }
 
     /* Var access methods */
-    public String getCategoryRef(){
-        return mCategoryRef;
+    public String getRootRef(){
+        return mRootRef;
     }
-    public void setCategoryRef(String ref){
-        mCategoryRef = ref;
+    public void setRootRef(String ref){
+        mRootRef = ref;
     }
 
     public void onPermissionsGranted(int requestCode) {

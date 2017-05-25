@@ -67,6 +67,20 @@ tools:showIn="@layout/activity_category">
             android:textSize="@dimen/titleTextSize" />
 
         <TextView
+            android:id="@+id/vTaxonomyLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginBottom"
+            android:text="@string/taxonomyLabel"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/subcategoriesTextSize"/>
+
+        <TextView
+            android:id="@+id/vTaxonomy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
             android:id="@+id/vDescriptionLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,6 +91,20 @@ tools:showIn="@layout/activity_category">
 
         <TextView
             android:id="@+id/vDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/vHabitatLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/contentMarginBottom"
+            android:text="@string/habitatLabel"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/subcategoriesTextSize"/>
+
+        <TextView
+            android:id="@+id/vHabitat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

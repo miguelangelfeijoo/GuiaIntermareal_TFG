@@ -1,9 +1,12 @@
-package tfg.uniovi.es.guiaintermareal;
+package tfg.uniovi.es.guiaintermareal.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+
+import tfg.uniovi.es.guiaintermareal.MainActivity;
+import tfg.uniovi.es.guiaintermareal.R;
 
 
 public class SplashActivity extends AppCompatActivity {

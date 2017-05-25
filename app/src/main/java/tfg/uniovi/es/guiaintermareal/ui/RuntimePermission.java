@@ -45,8 +45,6 @@ public abstract class RuntimePermission extends AppCompatActivity {
             } else {
                 ActivityCompat.requestPermissions(this, requestedPermissions, requestCode);
             }
-        } else {
-            //onPermissionsGranted(requestCode);
         }
     }
 
