@@ -60,7 +60,7 @@ public class CategoryActivity extends MainActivity{
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,7 +69,7 @@ public class CategoryActivity extends MainActivity{
                 i.putExtra("title", getIntent().getStringExtra("title"));
                 startActivity(i);
             }
-        });
+        });*/
 
         mProgressDialog = new ProgressDialog(this);
         FloatingActionButton identify = (FloatingActionButton) findViewById(R.id.identify);

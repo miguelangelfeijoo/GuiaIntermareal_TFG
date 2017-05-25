@@ -13,7 +13,7 @@ tools:showIn="@layout/activity_category">
 
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="@dimen/imageDetailHeight"
+    android:layout_height="232dp"
     android:layout_marginBottom="@dimen/contentMarginBottom">
 
     <ImageView
@@ -31,20 +31,9 @@ tools:showIn="@layout/activity_category">
         app:srcCompat="@android:drawable/ic_menu_camera"
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginEnd="13dp"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/fab"
-        android:layout_marginEnd="16dp" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_dialog_map"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="15dp" />
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
 
@@ -64,7 +53,7 @@ tools:showIn="@layout/activity_category">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textSize="@dimen/titleTextSize" />
+            android:textSize="@dimen/titleTextSize"/>
 
         <TextView
             android:id="@+id/vTaxonomyLabel"
