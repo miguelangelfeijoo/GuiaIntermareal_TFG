@@ -34,7 +34,7 @@ import tfg.uniovi.es.guiaintermareal.adapter.SpecieListAdapter;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
 import tfg.uniovi.es.guiaintermareal.ui.RuntimePermission;
 
-public class MainActivity extends RuntimePermission implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends RuntimePermission{
 
     /* Var declaration */
     public static String mCategoryTitle = "Algas y Liquenes";
@@ -91,13 +91,6 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setItemIconTintList(null);
-
-        if (navigationView != null) {
-            setupDrawerContent(navigationView);
-        }
         // Send a Query to the database
         database = FirebaseDatabase.getInstance();
         rootRef = database.getReference().child("Categorias");
@@ -120,9 +113,6 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
                Toast.makeText(MainActivity.this,
                         "Header: "+String.valueOf(expandableListView.getItemAtPosition(groupPosition)) +
                                 "\nItem: "+ String.valueOf(childPosition), Toast.LENGTH_SHORT).show();
-
-                //String hijo = listDataChild.get(String.valueOf(expandableListView.getItemAtPosition(groupPosition))).get(childPosition);
-                //System.out.println("LISTDATACHILD: " + hijo);
 
                 view.setSelected(true);
                 if (view_Group != null) {
@@ -169,7 +159,6 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
                 listDataChild.clear();
                 for(DataSnapshot dsp : dataSnapshot.getChildren()){
                     listDataHeader.add(dsp.getKey());
-                    //collectChild((Map<String, Object>) dsp.getValue());
                     List<String> heading = new ArrayList<String>();
                     for (DataSnapshot d : dsp.getChildren()) {
                         heading.add(d.getKey());
@@ -185,28 +174,6 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
 
             }
         });
-    }
-
-    private void collectChild(Map<String, Object> species){
-        ArrayList<String> speciesCategory = new ArrayList<>();
-        for(Map.Entry<String, Object> entry : species.entrySet()){
-            Map categoryName = (Map) entry.getValue();
-            speciesCategory.add((String) categoryName.get("title"));
-        }
-
-        //System.out.println(speciesCategory.toString());
-    }
-
-    private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        menuItem.setChecked(true);
-                        mDrawerLayout.closeDrawers();
-                        return true;
-                    }
-                });
     }
 
     @Override
@@ -228,15 +195,6 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-       /* Navigation menu for species */
-    @SuppressWarnings("StatementWithEmptyBody")
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -265,7 +223,6 @@ public class MainActivity extends RuntimePermission implements NavigationView.On
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dsp : dataSnapshot.getChildren()){
                     //Aqui salen Cefalopodos, Bivalvos, Quitones y Caracoles en el dsp
-                    //System.out.println("*******SUBCATEGORY: "+dsp.child("subcategory"));
                     if(dsp.child("subcategory").getValue() != null ){
                         //ES SUBCATEGORIA
                     }else{
