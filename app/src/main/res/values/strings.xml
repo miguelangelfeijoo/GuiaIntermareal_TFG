@@ -25,4 +25,5 @@
     <string name="habitatLabel">Habitat</string>
     <string name="taxonomyLabel">Taxonomia</string>
     <string name="referencesLabel">Referencias</string>
+    <string name="action_search">Buscar especie</string>
 </resources>

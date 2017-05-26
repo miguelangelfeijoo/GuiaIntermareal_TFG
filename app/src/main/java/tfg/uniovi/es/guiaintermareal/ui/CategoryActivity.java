@@ -51,15 +51,17 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     String nombre, description, imageUrl, taxonomy, ecology, habitat;
     ArrayList<String> references;
     private FABToolbarLayout morph;
+    TextView vTitle, vDescription, vEcology, vTaxonomy, vHabitat, vReferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(MainActivity.mCategoryTitle);
 
-        TextView vTitle, vDescription, vEcology, vTaxonomy, vHabitat, vReferences;
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getIntent().getStringExtra("title"));
+        setSupportActionBar(toolbar);
+
         mStorage = FirebaseStorage.getInstance().getReference();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

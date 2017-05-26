@@ -9,9 +9,9 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_map"
+        android:id="@+id/action_search"
         android:orderInCategory="200"
-        android:title="@string/action_map"
+        android:title="@string/action_search"
         app:showAsAction="never" />
 
 </menu>

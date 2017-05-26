@@ -78,6 +78,7 @@ public class MainActivity extends RuntimePermission{
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(mCategoryTitle);
+        setSupportActionBar(toolbar);
 
         requestAppPermissions(new String[]{
                         android.Manifest.permission.CAMERA,
@@ -129,7 +130,7 @@ public class MainActivity extends RuntimePermission{
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long id) {
                 int count = expandableListView.getCount();
                 if (expandableListView.isGroupExpanded(groupPosition)){
-                       //Colapsado
+                    //Colapsado
                 }else {
                     //Expandido
                     for (int c = 0; c < count; c++) {
@@ -257,7 +258,7 @@ public class MainActivity extends RuntimePermission{
 
     public void onPermissionsGranted(int requestCode) {
         //Do anything when permisson granted
-        Toast.makeText(getApplicationContext(), "Permisos condedido!", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Permisos condedidos!", Toast.LENGTH_LONG).show();
     }
 
 }
