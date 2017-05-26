@@ -34,7 +34,7 @@
     <LinearLayout
         android:id="@id/fabtoolbar_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="centerInside"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
+            app:srcCompat="@mipmap/ic_photo_camera" />
 
         <ImageView
             android:id="@+id/gallery"
@@ -52,7 +52,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="centerInside"
-            app:srcCompat="@android:drawable/ic_menu_gallery" />
+            app:srcCompat="@mipmap/ic_photo_library" />
 
         <ImageView
             android:id="@+id/map"
@@ -60,7 +60,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="centerInside"
-            app:srcCompat="@android:drawable/ic_dialog_map" />
+            app:srcCompat="@mipmap/ic_add_location" />
 
         <ImageView
             android:id="@+id/exit"
@@ -68,7 +68,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="centerInside"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+            app:srcCompat="@mipmap/ic_close" />
 
     </LinearLayout>
 

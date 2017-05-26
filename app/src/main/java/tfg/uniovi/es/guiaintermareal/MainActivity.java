@@ -1,7 +1,15 @@
 package tfg.uniovi.es.guiaintermareal;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -9,6 +17,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,13 +26,21 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,12 +48,15 @@ import tfg.uniovi.es.guiaintermareal.adapter.SpecieListAdapter;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
 import tfg.uniovi.es.guiaintermareal.ui.RuntimePermission;
 
+import static tfg.uniovi.es.guiaintermareal.ui.CategoryActivity.networkConnected;
+
 public class MainActivity extends RuntimePermission{
 
     /* Var declaration */
     public static String mCategoryTitle = "Algas y Liquenes";
     public static String mRootRef = "Categorias/";
     private static final int REQUEST_PERMISSION = 10;
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
 
     public RecyclerView mSpecieList;
     public static FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder> firebaseRecyclerAdapter;
@@ -48,6 +68,10 @@ public class MainActivity extends RuntimePermission{
     List<String> listDataHeader;
     List<Object> listChildValues;
     HashMap<String, List<String>> listDataChild;
+
+    private ProgressDialog mProgressDialog;
+    public StorageReference mStorage;
+    Uri picUri;
 
     /* Variables de acceso a Firebase */
     FirebaseDatabase database;
@@ -76,6 +100,9 @@ public class MainActivity extends RuntimePermission{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(mCategoryTitle);
         setSupportActionBar(toolbar);
+
+        mStorage = FirebaseStorage.getInstance().getReference();
+        mProgressDialog = new ProgressDialog(this);
 
         requestAppPermissions(new String[]{
                         android.Manifest.permission.CAMERA,
@@ -188,7 +215,18 @@ public class MainActivity extends RuntimePermission{
       if (drawer.isDrawerOpen(GravityCompat.START)) {
           drawer.closeDrawer(GravityCompat.START);
       } else {
-          super.onBackPressed();
+          new AlertDialog.Builder(this).setIcon(R.mipmap.ic_info_outline).setTitle("Salir")
+                  .setMessage("¿Está seguro de que quiere salir de la aplicación?")
+                  .setPositiveButton("Si", new DialogInterface.OnClickListener(){
+                      @Override
+                      public void onClick(DialogInterface dialog, int which) {
+                          Intent intent = new Intent(Intent.ACTION_MAIN);
+                          intent.addCategory(Intent.CATEGORY_HOME);
+                          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                          startActivity(intent);
+                          finish();
+                      }
+                  }).setNegativeButton("No", null).show();
       }
     }
 
@@ -196,6 +234,80 @@ public class MainActivity extends RuntimePermission{
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.action_identify:
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                File file=getOutputMediaFile(1);
+                picUri = Uri.fromFile(file); // create
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,picUri); // set the image file
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                break;
+
+            case R.id.action_search:
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (networkConnected(getApplicationContext())) {
+            if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                mProgressDialog.setMessage("Subiendo archivo...");
+                mProgressDialog.show();
+                Uri uri;
+                //La imagen se obtiene de la camara
+                uri = picUri;
+                StorageReference filepath = mStorage.child("Identificame").child(uri.getLastPathSegment());
+                filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(MainActivity.this, "Imagen subida con exito!", Toast.LENGTH_LONG).show();
+                        mProgressDialog.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this, "Ha habido un fallo al subir la imagen!!", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+        }else{
+            mProgressDialog.dismiss();
+            Toast.makeText(MainActivity.this, "Es necesario tener conexion a Internet para subir la foto!!", Toast.LENGTH_LONG).show();
+        }
+
+
+    }
+
+    /** Create a File for saving an image */
+    private  File getOutputMediaFile(int type){
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "GuiaIntermareal");
+
+        /**Create the storage directory if it does not exist*/
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+        /**Create a media file name*/
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        if (type == 1){
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "IMG_"+ timeStamp + ".png");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
     }
 
     public void setRecyclerAdapter(){
