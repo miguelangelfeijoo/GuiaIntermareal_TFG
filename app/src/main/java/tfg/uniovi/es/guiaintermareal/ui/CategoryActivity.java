@@ -58,7 +58,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getIntent().getStringExtra("title"));
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
 
         mStorage = FirebaseStorage.getInstance().getReference();
 
