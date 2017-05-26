@@ -11,12 +11,11 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.os.EnvironmentCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.method.LinkMovementMethod;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,7 +35,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import tfg.uniovi.es.guiaintermareal.MainActivity;
 import tfg.uniovi.es.guiaintermareal.R;
 
 import static tfg.uniovi.es.guiaintermareal.MainActivity.mRootRef;
@@ -105,14 +103,20 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         vEcology.setText(ecology);
         vTaxonomy.setText(taxonomy);
         vHabitat.setText(habitat);
-        //String referenceList=" ";
-        StringBuilder referenceList = new StringBuilder();
+
+        StringBuilder linksList = new StringBuilder();
         for(int i=0; i<references.size();i++){
-            referenceList.append(references.get(i));
-            referenceList.append("\n");
+            linksList.append(references.get(i));
+            linksList.append("\n");
         }
-        vReferences.setText(referenceList);
+        vReferences.setText(linksList);
         setImage(getApplicationContext(),imageUrl);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
     @Override
@@ -161,7 +165,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
                 mProgressDialog.setMessage("Subiendo archivo...");
                 mProgressDialog.show();
                 Uri uri;
-                System.out.println("******FLAG: "+getIntent().getStringExtra("type"));
                 if(TOOLBAR_ACTION_TYPE == "gallery") {
                     //La imagen se obtiene de la galeria
                     uri = data.getData();
