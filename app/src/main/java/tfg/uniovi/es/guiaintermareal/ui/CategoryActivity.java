@@ -67,45 +67,21 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         //navigationView.setNavigationItemSelectedListener(MainActivity.class);
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(CategoryActivity.this, MapsActivity.class);
-                i.putExtra("ref", mRootRef);
-                i.putExtra("title", getIntent().getStringExtra("title"));
-                startActivity(i);
-            }
-        });*/
-
         mProgressDialog = new ProgressDialog(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         morph = (FABToolbarLayout) findViewById(R.id.fabtoolbar);
 
-        View gallery, camera, map;
+        View gallery, camera, map, exit;
         gallery = findViewById(R.id.gallery);
         camera = findViewById(R.id.camera);
         map = findViewById(R.id.map);
+        exit = findViewById(R.id.exit);
 
         fab.setOnClickListener(this);
         gallery.setOnClickListener(this);
         camera.setOnClickListener(this);
         map.setOnClickListener(this);
-
-        /*identify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-                File file=getOutputMediaFile(1);
-                picUri = Uri.fromFile(file); // create
-                i.putExtra(MediaStore.EXTRA_OUTPUT,picUri); // set the image file
-                startActivityForResult(i, REQUEST_IMAGE_CAPTURE);
-                /*Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-            }
-        });*/
+        exit.setOnClickListener(this);
 
         nombre = getIntent().getStringExtra("title");
         description = getIntent().getStringExtra("description");
@@ -158,6 +134,9 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
                 intent.putExtra("ref", mRootRef);
                 intent.putExtra("title", getIntent().getStringExtra("title"));
                 startActivity(intent);
+                break;
+
+            case R.id.exit:
                 break;
         }
 /*        if(v.getId() == R.id.fab){
