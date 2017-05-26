@@ -11,10 +11,12 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.os.EnvironmentCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +33,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import tfg.uniovi.es.guiaintermareal.MainActivity;
@@ -46,6 +49,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     public StorageReference mStorage;
     Uri picUri;
     String nombre, description, imageUrl, taxonomy, ecology, habitat;
+    ArrayList<String> references;
     private FABToolbarLayout morph;
 
     @Override
@@ -55,7 +59,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(MainActivity.mCategoryTitle);
 
-        TextView vTitle, vDescription, vEcology, vTaxonomy, vHabitat;
+        TextView vTitle, vDescription, vEcology, vTaxonomy, vHabitat, vReferences;
         mStorage = FirebaseStorage.getInstance().getReference();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -85,18 +89,27 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         imageUrl = getIntent().getStringExtra("image");
         taxonomy = getIntent().getStringExtra("taxonomy");
         habitat = getIntent().getStringExtra("habitat");
+        references = getIntent().getStringArrayListExtra("references");
 
         vTitle = (TextView) findViewById(R.id.vTitle);
         vDescription = (TextView) findViewById(R.id.vDescription);
         vEcology = (TextView) findViewById(R.id.vEcology);
         vTaxonomy = (TextView) findViewById(R.id.vTaxonomy);
         vHabitat = (TextView) findViewById(R.id.vHabitat);
+        vReferences = (TextView) findViewById(R.id.vReferences);
 
         vTitle.setText(nombre);
         vDescription.setText(description);
         vEcology.setText(ecology);
         vTaxonomy.setText(taxonomy);
         vHabitat.setText(habitat);
+        //String referenceList=" ";
+        StringBuilder referenceList = new StringBuilder();
+        for(int i=0; i<references.size();i++){
+            referenceList.append(references.get(i));
+            referenceList.append("\n");
+        }
+        vReferences.setText(referenceList);
         setImage(getApplicationContext(),imageUrl);
     }
 

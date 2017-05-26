@@ -1,20 +1,20 @@
 package tfg.uniovi.es.guiaintermareal.model;
 
-public class Specie {
-    private String title,
-                   description,
-                   ecology,
-                   image,
-                   habitat,
-                   taxonomy;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
-    public Specie(String title, String description, String ecology, String image, String habitat, String taxonomy) {
+public class Specie {
+    private String title, description, ecology, image, habitat, taxonomy;
+    private ArrayList<String> references;
+
+    public Specie(String title, String description, String ecology, String image, String habitat, String taxonomy, ArrayList<String> references) {
         this.title = title;
         this.description = description;
         this.ecology = ecology;
         this.image = image;
         this.habitat = habitat;
         this.taxonomy = taxonomy;
+        this.references = references;
     }
 
     public String getHabitat() {
@@ -66,6 +66,14 @@ public class Specie {
 
     public void setEcology(String ecology) {
         this.ecology = ecology;
+    }
+
+    public ArrayList<String> getReferences() {
+        return references;
+    }
+
+    public void setReferences(ArrayList<String> references) {
+        this.references = references;
     }
 }
 

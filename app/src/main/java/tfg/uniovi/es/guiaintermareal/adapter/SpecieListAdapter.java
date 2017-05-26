@@ -63,6 +63,7 @@ public class SpecieListAdapter extends Activity {
                                         intent.putExtra("image", sp.getImage());
                                         intent.putExtra("habitat", sp.getHabitat());
                                         intent.putExtra("taxonomy", sp.getTaxonomy());
+                                        intent.putStringArrayListExtra("references", sp.getReferences());
                                     }
                                     context.startActivity(intent);
                                 }
