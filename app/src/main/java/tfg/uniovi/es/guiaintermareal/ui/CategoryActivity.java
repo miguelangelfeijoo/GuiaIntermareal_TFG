@@ -26,6 +26,7 @@ import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -70,6 +71,8 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
         ArrayList<String> carousel = getIntent().getStringArrayListExtra("carousel");
         System.out.println("CAROUSEL: " + carousel.get(0));
+
+        mStorage = FirebaseStorage.getInstance().getReference();
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         mCarouselAdapter = new CarouselAdapter(CategoryActivity.this, carousel);
