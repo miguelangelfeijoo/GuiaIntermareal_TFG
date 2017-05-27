@@ -39,7 +39,6 @@ public class SpecieListAdapter extends Activity {
                 public void onClick(View v) {
                     count = MainActivity.firebaseRecyclerAdapter.getItemCount();
                     ref = MainActivity.firebaseRecyclerAdapter.getRef(0);
-                    System.out.println("****REF SLA: " + ref);
                     ref.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -48,7 +47,6 @@ public class SpecieListAdapter extends Activity {
                                 if(dataSnapshot.child("subcategory").getValue() != null ){
                                     //ES SUBCATEGORIA
                                     Specie sp = MainActivity.firebaseRecyclerAdapter.getItem(getAdapterPosition());
-                                    System.out.println("******ESPECIE: "+sp.getTitle());
                                     //loadCategoryData(String.valueOf(sp.getTitle()));
 
                                 }else{
@@ -64,6 +62,7 @@ public class SpecieListAdapter extends Activity {
                                         intent.putExtra("habitat", sp.getHabitat());
                                         intent.putExtra("taxonomy", sp.getTaxonomy());
                                         intent.putStringArrayListExtra("references", sp.getReferences());
+                                        intent.putStringArrayListExtra("carousel", sp.getCarousel());
                                     }
                                     context.startActivity(intent);
                                 }

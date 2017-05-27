@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +26,6 @@ import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import tfg.uniovi.es.guiaintermareal.R;
+import tfg.uniovi.es.guiaintermareal.adapter.CarouselAdapter;
 
 import static tfg.uniovi.es.guiaintermareal.MainActivity.mRootRef;
 
@@ -43,9 +44,16 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static String TOOLBAR_ACTION_TYPE = "";
+
     private ProgressDialog mProgressDialog;
     public StorageReference mStorage;
     Uri picUri;
+
+    //int images[] = {R.drawable.imagen1, R.drawable.imagen2, R.drawable.imagen3};
+    ViewPager viewPager;
+    CarouselAdapter mCarouselAdapter;
+    ArrayList<String> carousel;
+
     String nombre, description, imageUrl, taxonomy, ecology, habitat;
     ArrayList<String> references;
     private FABToolbarLayout morph;
@@ -60,7 +68,12 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         toolbar.setTitle(getIntent().getStringExtra("title"));
         //setSupportActionBar(toolbar);
 
-        mStorage = FirebaseStorage.getInstance().getReference();
+        ArrayList<String> carousel = getIntent().getStringArrayListExtra("carousel");
+        System.out.println("CAROUSEL: " + carousel.get(0));
+
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        mCarouselAdapter = new CarouselAdapter(CategoryActivity.this, carousel);
+        viewPager.setAdapter(mCarouselAdapter);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -110,7 +123,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
             linksList.append("\n");
         }
         vReferences.setText(linksList);
-        setImage(getApplicationContext(),imageUrl);
+        //setImage(getApplicationContext(),imageUrl);
     }
 
     @Override
