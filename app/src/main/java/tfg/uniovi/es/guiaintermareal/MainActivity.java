@@ -219,7 +219,7 @@ public class MainActivity extends RuntimePermission{
       } else {
           new AlertDialog.Builder(this).setIcon(R.mipmap.ic_info_outline).setTitle("Salir")
                   .setMessage("¿Está seguro de que quiere salir de la aplicación?")
-                  .setPositiveButton("Si", new DialogInterface.OnClickListener(){
+                  .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(){
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
                           Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -228,7 +228,7 @@ public class MainActivity extends RuntimePermission{
                           startActivity(intent);
                           finish();
                       }
-                  }).setNegativeButton("No", null).show();
+                  }).setNegativeButton("Cancelar", null).show();
       }
     }
 
