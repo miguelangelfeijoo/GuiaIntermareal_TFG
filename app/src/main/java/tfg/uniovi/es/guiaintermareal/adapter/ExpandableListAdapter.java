@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -31,8 +32,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        int i = mListDataHeader.size();
-        return i;
+        return mListDataHeader.size();
     }
 
     @Override
@@ -77,8 +77,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_header, null);
         }
-        TextView lblListHeader = (TextView) convertView
-                .findViewById(R.id.submenu);
+        ImageView groupIco = (ImageView) convertView.findViewById(R.id.iconimage);
+        TextView lblListHeader = (TextView) convertView.findViewById(R.id.submenu);
+
+        groupIco.setImageResource(R.mipmap.drawer_group);
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
         //lblListHeader.setText(headerTitle.getIconName());
