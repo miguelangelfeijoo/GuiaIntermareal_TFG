@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import tfg.uniovi.es.guiaintermareal.adapter.SpecieListAdapter;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
@@ -57,7 +58,6 @@ public class MainActivity extends RuntimePermission{
     //**************************************************************************************************
     //                                      VAR DECLARATION
     //**************************************************************************************************
-
     public static String mCategoryTitle = "Algas y Liquenes";
     public static String mRootRef = "Categorias/";
     private static final int REQUEST_PERMISSION = 10;
@@ -67,7 +67,6 @@ public class MainActivity extends RuntimePermission{
     public static FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder> firebaseRecyclerAdapter;
 
     View view_Group;
-    private DrawerLayout mDrawerLayout;
     ExpandableListAdapter mMenuAdapter;
     ExpandableListView expandableList;
     List<String> listDataHeader;
@@ -85,7 +84,6 @@ public class MainActivity extends RuntimePermission{
     //**************************************************************************************************
     //                                   ACTIVITY FUNCTIONS
     //**************************************************************************************************
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,8 +180,8 @@ public class MainActivity extends RuntimePermission{
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            new AlertDialog.Builder(this).setIcon(R.mipmap.ic_info_outline).setTitle("Salir")
-                    .setMessage("¿Está seguro de que quiere salir de la aplicación?")
+            new AlertDialog.Builder(this).setIcon(R.mipmap.ic_info_outline).setTitle(R.string.exit_title)
+                    .setMessage(R.string.exit_message)
                     .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -210,11 +208,10 @@ public class MainActivity extends RuntimePermission{
     //**************************************************************************************************
     //                                DRAWER NAVIGATION & CONTENT
     //**************************************************************************************************
-
     private void prepareDrawerListData() {
-        listDataHeader = new ArrayList<String>();
-        listChildValues = new ArrayList<Object>();
-        listDataChild = new HashMap<String, List<String>>();
+        listDataHeader = new ArrayList<>();
+        listChildValues = new ArrayList<>();
+        listDataChild = new HashMap<>();
 
         rootRef.addValueEventListener(  new ValueEventListener() {
             @Override
@@ -224,7 +221,7 @@ public class MainActivity extends RuntimePermission{
                 listDataChild.clear();
                 for(DataSnapshot dsp : dataSnapshot.getChildren()){
                     listDataHeader.add(dsp.getKey());
-                    List<String> heading = new ArrayList<String>();
+                    List<String> heading = new ArrayList<>();
                     for (DataSnapshot d : dsp.getChildren()) {
                         heading.add(d.getKey());
                     }
@@ -289,7 +286,6 @@ public class MainActivity extends RuntimePermission{
     //**************************************************************************************************
     //                                   UPLOAD IMAGES TO DB
     //**************************************************************************************************
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -333,7 +329,7 @@ public class MainActivity extends RuntimePermission{
             }
         }
         /**Create a media file name*/
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         File mediaFile;
         if (type == 1){
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
@@ -412,7 +408,6 @@ public class MainActivity extends RuntimePermission{
     //**************************************************************************************************
     //                                        PERMISSIONS
     //**************************************************************************************************
-
     public void onPermissionsGranted(int requestCode) {
         //Do anything when permisson granted
         Toast.makeText(getApplicationContext(), "Permisos condedidos!", Toast.LENGTH_LONG).show();
