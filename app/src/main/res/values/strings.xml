@@ -29,4 +29,13 @@
     <string name="action_about">Acerca de…</string>
     <string name="exit_title">Salir</string>
     <string name="exit_message">¿Está seguro de que quiere salir de la aplicación?</string>
+    <string name="imageViewyDescription">Specie background image for RecyclerView</string>
+    <string name="about_url">www.uniovi.es</string>
+    <string name="university">Universidad de Oviedo</string>
+    <string name="colaboration">Proyecto en colaboración con el departamento de Biología</string>
+    <string name="createdBy"><![CDATA[<Diseñado & Desarrollado>]]></string>
+    <string name="developerName">Miguel Ángel Feijoo</string>
+    <string name="infoBy">Información obtenida por Noelia</string>
+    <string name="appDescription">Guía para móviles de la fauna y flora intermareal</string>
+
 </resources>

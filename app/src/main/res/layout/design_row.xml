@@ -11,9 +11,9 @@
             android:layout_height="75dp"
             android:scaleType="fitXY"
             android:id="@+id/imageViewy"
-            android:contentDescription="Specie background image for RecyclerView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
+            android:contentDescription="@string/imageViewyDescription"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
             android:alpha="0.5" />
 
         <TextView

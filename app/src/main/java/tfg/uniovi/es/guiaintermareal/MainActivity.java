@@ -49,6 +49,7 @@ import java.util.Locale;
 
 import tfg.uniovi.es.guiaintermareal.adapter.SpecieListAdapter;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
+import tfg.uniovi.es.guiaintermareal.ui.AboutActivity;
 import tfg.uniovi.es.guiaintermareal.ui.RuntimePermission;
 
 import static tfg.uniovi.es.guiaintermareal.ui.CategoryActivity.networkConnected;
@@ -268,9 +269,10 @@ public class MainActivity extends RuntimePermission{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+        Intent intent;
         switch(item.getItemId()){
             case R.id.action_identify:
-                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 File file=getOutputMediaFile(1);
                 picUri = Uri.fromFile(file); // create
                 intent.putExtra(MediaStore.EXTRA_OUTPUT,picUri); // set the image file
@@ -278,6 +280,8 @@ public class MainActivity extends RuntimePermission{
                 break;
 
             case R.id.action_about:
+                intent = new Intent(getApplicationContext(), AboutActivity.class);
+                startActivity(intent);
                 break;
         }
         return true;
