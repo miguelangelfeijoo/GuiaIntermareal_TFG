@@ -26,5 +26,7 @@
     <string name="taxonomyLabel">Taxonomia</string>
     <string name="referencesLabel">Referencias</string>
     <string name="action_search">Buscar especie</string>
-    <string name="action_about">Acerca de...</string>
+    <string name="action_about">Acerca de…</string>
+    <string name="exit_title">Salir</string>
+    <string name="exit_message">¿Está seguro de que quiere salir de la aplicación?</string>
 </resources>

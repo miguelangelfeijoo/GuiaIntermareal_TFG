@@ -35,6 +35,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import tfg.uniovi.es.guiaintermareal.R;
 import tfg.uniovi.es.guiaintermareal.adapter.CarouselAdapter;
@@ -53,7 +54,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     //int images[] = {R.drawable.imagen1, R.drawable.imagen2, R.drawable.imagen3};
     ViewPager viewPager;
     CarouselAdapter mCarouselAdapter;
-    ArrayList<String> carousel;
 
     String nombre, description, imageUrl, taxonomy, ecology, habitat;
     ArrayList<String> references;
@@ -126,7 +126,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
             linksList.append("\n");
         }
         vReferences.setText(linksList);
-        //setImage(getApplicationContext(),imageUrl);
     }
 
     @Override
@@ -241,7 +240,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
             }
         }
         /**Create a media file name*/
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         File mediaFile;
         if (type == 1){
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
@@ -251,12 +250,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         }
 
         return mediaFile;
-    }
-
-
-    private void setImage(Context ctx , String image){
-        ImageView vImage = (ImageView)findViewById(R.id.vImage);
-        Picasso.with(ctx).load(image).into(vImage);
     }
 
 }

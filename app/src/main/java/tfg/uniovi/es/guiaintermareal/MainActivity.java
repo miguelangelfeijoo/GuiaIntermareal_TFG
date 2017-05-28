@@ -277,7 +277,7 @@ public class MainActivity extends RuntimePermission{
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
                 break;
 
-            case R.id.action_search:
+            case R.id.action_about:
                 break;
         }
         return true;
