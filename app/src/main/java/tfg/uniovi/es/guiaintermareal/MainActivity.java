@@ -54,7 +54,10 @@ import static tfg.uniovi.es.guiaintermareal.ui.CategoryActivity.networkConnected
 
 public class MainActivity extends RuntimePermission{
 
-    /* Var declaration */
+    //**************************************************************************************************
+    //                                      VAR DECLARATION
+    //**************************************************************************************************
+
     public static String mCategoryTitle = "Algas y Liquenes";
     public static String mRootRef = "Categorias/";
     private static final int REQUEST_PERMISSION = 10;
@@ -80,16 +83,8 @@ public class MainActivity extends RuntimePermission{
     DatabaseReference myRef, rootRef;
 
     //**************************************************************************************************
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            expandableList.setIndicatorBounds(expandableList.getRight()- 80, expandableList.getWidth());
-        } else {
-            expandableList.setIndicatorBoundsRelative(expandableList.getRight()- 80, expandableList.getWidth());
-        }
-    }
+    //                                   ACTIVITY FUNCTIONS
+    //**************************************************************************************************
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +132,7 @@ public class MainActivity extends RuntimePermission{
                                         View view,
                                         int groupPosition,
                                         int childPosition, long id) {
-               Toast.makeText(MainActivity.this,
+                Toast.makeText(MainActivity.this,
                         "Header: "+String.valueOf(expandableListView.getItemAtPosition(groupPosition)) +
                                 "\nItem: "+ String.valueOf(childPosition), Toast.LENGTH_SHORT).show();
 
@@ -173,6 +168,49 @@ public class MainActivity extends RuntimePermission{
         mSpecieList.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        setRecyclerAdapter();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            new AlertDialog.Builder(this).setIcon(R.mipmap.ic_info_outline).setTitle("Salir")
+                    .setMessage("¿Está seguro de que quiere salir de la aplicación?")
+                    .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Intent.ACTION_MAIN);
+                            intent.addCategory(Intent.CATEGORY_HOME);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }).setNegativeButton("Cancelar", null).show();
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            expandableList.setIndicatorBounds(expandableList.getRight()- 80, expandableList.getWidth());
+        } else {
+            expandableList.setIndicatorBoundsRelative(expandableList.getRight()- 80, expandableList.getWidth());
+        }
+    }
+
+    //**************************************************************************************************
+    //                                DRAWER NAVIGATION & CONTENT
+    //**************************************************************************************************
+
     private void prepareDrawerListData() {
         listDataHeader = new ArrayList<String>();
         listChildValues = new ArrayList<Object>();
@@ -203,34 +241,9 @@ public class MainActivity extends RuntimePermission{
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        setRecyclerAdapter();
-    }
-
-    @Override
-    public void onBackPressed() {
-      DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-      if (drawer.isDrawerOpen(GravityCompat.START)) {
-          drawer.closeDrawer(GravityCompat.START);
-      } else {
-          new AlertDialog.Builder(this).setIcon(R.mipmap.ic_info_outline).setTitle("Salir")
-                  .setMessage("¿Está seguro de que quiere salir de la aplicación?")
-                  .setPositiveButton("Aceptar", new DialogInterface.OnClickListener(){
-                      @Override
-                      public void onClick(DialogInterface dialog, int which) {
-                          Intent intent = new Intent(Intent.ACTION_MAIN);
-                          intent.addCategory(Intent.CATEGORY_HOME);
-                          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                          startActivity(intent);
-                          finish();
-                      }
-                  }).setNegativeButton("Cancelar", null).show();
-      }
-    }
+    //**************************************************************************************************
+//                                         ACTIONBAR MENU
+    //**************************************************************************************************
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -273,6 +286,10 @@ public class MainActivity extends RuntimePermission{
         return true;
     }
 
+    //**************************************************************************************************
+    //                                   UPLOAD IMAGES TO DB
+    //**************************************************************************************************
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -302,8 +319,6 @@ public class MainActivity extends RuntimePermission{
             mProgressDialog.dismiss();
             Toast.makeText(MainActivity.this, "Es necesario tener conexion a Internet para subir la foto!!", Toast.LENGTH_LONG).show();
         }
-
-
     }
 
     /** Create a File for saving an image */
@@ -330,6 +345,9 @@ public class MainActivity extends RuntimePermission{
         return mediaFile;
     }
 
+    //**************************************************************************************************
+    //                                  RECYCLERVIEW FOR DATA
+    //**************************************************************************************************
     public void setRecyclerAdapter(){
         firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder>(Specie.class, R.layout.design_row, SpecieListAdapter.SpecieViewHolder.class, myRef) {
@@ -373,6 +391,9 @@ public class MainActivity extends RuntimePermission{
         setRecyclerAdapter();
     }
 
+    //**************************************************************************************************
+    //                                       AUX FUNCTIONS
+    //**************************************************************************************************
     /* Sets category title on Toolbar */
     public void setToolbarTitle(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -386,6 +407,11 @@ public class MainActivity extends RuntimePermission{
     public void setRootRef(String ref){
         mRootRef = ref;
     }
+
+
+    //**************************************************************************************************
+    //                                        PERMISSIONS
+    //**************************************************************************************************
 
     public void onPermissionsGranted(int requestCode) {
         //Do anything when permisson granted
