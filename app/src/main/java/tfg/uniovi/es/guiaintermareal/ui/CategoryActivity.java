@@ -40,7 +40,7 @@ import java.util.Locale;
 import tfg.uniovi.es.guiaintermareal.R;
 import tfg.uniovi.es.guiaintermareal.adapter.CarouselAdapter;
 
-import static tfg.uniovi.es.guiaintermareal.MainActivity.mRootRef;
+import static tfg.uniovi.es.guiaintermareal.MainActivity.mCategoryRef;
 
 public class CategoryActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -161,7 +161,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
             case R.id.map:
                 intent = new Intent(CategoryActivity.this, MapsActivity.class);
 
-                intent.putExtra("ref", mRootRef);
+                intent.putExtra("ref", mCategoryRef);
                 intent.putExtra("title", getIntent().getStringExtra("title"));
                 startActivity(intent);
                 break;

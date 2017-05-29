@@ -37,5 +37,6 @@
     <string name="developerName">Miguel Ángel Feijoo</string>
     <string name="infoBy">Información obtenida por Noelia</string>
     <string name="appDescription">Guía para móviles de la fauna y flora intermareal</string>
+    <string name="title_activity_search">SearchActivity</string>
 
 </resources>

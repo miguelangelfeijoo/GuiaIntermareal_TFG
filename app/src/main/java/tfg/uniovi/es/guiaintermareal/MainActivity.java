@@ -51,6 +51,7 @@ import tfg.uniovi.es.guiaintermareal.adapter.SpecieListAdapter;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
 import tfg.uniovi.es.guiaintermareal.ui.AboutActivity;
 import tfg.uniovi.es.guiaintermareal.ui.RuntimePermission;
+import tfg.uniovi.es.guiaintermareal.ui.SearchActivity;
 
 import static tfg.uniovi.es.guiaintermareal.ui.CategoryActivity.networkConnected;
 
@@ -60,7 +61,8 @@ public class MainActivity extends RuntimePermission{
     //                                      VAR DECLARATION
     //**************************************************************************************************
     public static String mCategoryTitle = "Algas y Liquenes";
-    public static String mRootRef = "Categorias/";
+    public static String mCategoryRef = "Categorias/";
+
     private static final int REQUEST_PERMISSION = 10;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
 
@@ -80,7 +82,7 @@ public class MainActivity extends RuntimePermission{
 
     /* Variables de acceso a Firebase */
     FirebaseDatabase database;
-    DatabaseReference myRef, rootRef;
+    DatabaseReference myRef, categoryRef;
 
     //**************************************************************************************************
     //                                   ACTIVITY FUNCTIONS
@@ -114,9 +116,9 @@ public class MainActivity extends RuntimePermission{
 
         // Send a Query to the database
         database = FirebaseDatabase.getInstance();
-        rootRef = database.getReference().child("Categorias");
-        myRef = rootRef.child(mCategoryTitle);
-        rootRef.keepSynced(true);
+        categoryRef = database.getReference().child("Categorias");
+        myRef = categoryRef.child(mCategoryTitle);
+        categoryRef.keepSynced(true);
 
 
         // ***** CARGAMOS LOS DATOS DEL DRAWER ******
@@ -214,7 +216,7 @@ public class MainActivity extends RuntimePermission{
         listChildValues = new ArrayList<>();
         listDataChild = new HashMap<>();
 
-        rootRef.addValueEventListener(  new ValueEventListener() {
+        categoryRef.addValueEventListener(  new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int pos = 0;
@@ -253,10 +255,12 @@ public class MainActivity extends RuntimePermission{
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //Text has changed, apply filtering?
                 //LLAMADA A METODO DE LA CLASE SEARCHACTIVITY
+                Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
+                searchIntent.putExtra("query", query);
+                startActivity(searchIntent);
                 System.out.println("LA QUERY ES: " + query);
-                return false;
+                return true;
             }
 
             @Override
@@ -366,8 +370,8 @@ public class MainActivity extends RuntimePermission{
 
     public void loadCategoryData(String title){
         mCategoryTitle = title;
-        setRootRef("Categorias/" + mCategoryTitle);
-        myRef = database.getReference(getRootRef());
+        setCategoryRef("Categorias/" + mCategoryTitle);
+        myRef = database.getReference(getCategoryRef());
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -401,13 +405,12 @@ public class MainActivity extends RuntimePermission{
     }
 
     /* Var access methods */
-    public String getRootRef(){
-        return mRootRef;
+    public String getCategoryRef(){
+        return mCategoryRef;
     }
-    public void setRootRef(String ref){
-        mRootRef = ref;
+    public void setCategoryRef(String ref){
+        mCategoryRef = ref;
     }
-
 
     //**************************************************************************************************
     //                                        PERMISSIONS

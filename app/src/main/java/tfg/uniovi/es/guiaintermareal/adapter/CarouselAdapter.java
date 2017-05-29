@@ -2,7 +2,6 @@ package tfg.uniovi.es.guiaintermareal.adapter;
 
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,6 @@ public class CarouselAdapter extends PagerAdapter{
 
     Context context;
     ArrayList<String> images;
-    //ArrayList<String> images;
     LayoutInflater layoutInflater;
 
     public CarouselAdapter(Context context, ArrayList<String> images){
@@ -53,12 +51,6 @@ public class CarouselAdapter extends PagerAdapter{
     @Override
     public void destroyItem(ViewGroup container, int position, Object object){
         container.removeView((LinearLayout) object);
-    }
-
-
-    private void setImage(Context ctx , String image, View itemView){
-        ImageView imageView = (ImageView)itemView.findViewById(R.id.vImage);
-        Picasso.with(ctx).load(image).into(imageView);
     }
 
 }
