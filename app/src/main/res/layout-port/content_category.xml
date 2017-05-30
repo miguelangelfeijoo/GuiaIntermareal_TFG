@@ -18,7 +18,21 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/imageDetailHeight" />
+        android:layout_height="match_parent"/>
+
+    <com.rd.PageIndicatorView
+        android:id="@+id/pageIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:piv_viewPager="@id/viewPager"
+        app:piv_interactiveAnimation="true"
+        app:piv_animationType="color"
+        app:piv_dynamicCount="true"
+        android:layout_marginBottom="5dp"
+        app:piv_selectedColor="@color/colorAccent"
+        app:piv_unselectedColor="@color/cardview_light_background"/>
 
 </RelativeLayout>
 

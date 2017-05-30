@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +28,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
+import com.rd.PageIndicatorView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -77,6 +76,9 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         mCarouselAdapter = new CarouselAdapter(CategoryActivity.this, carousel);
         viewPager.setAdapter(mCarouselAdapter);
+
+        PageIndicatorView pageIndicatorView = (PageIndicatorView) findViewById(R.id.pageIndicatorView);
+        pageIndicatorView.setViewPager(viewPager);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

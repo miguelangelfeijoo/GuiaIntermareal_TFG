@@ -41,6 +41,7 @@ dependencies {
     compile 'com.firebase:geofire-android:2.1.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.fafaldo:fab-toolbar:1.2.0'
+    compile 'com.romandanylyk:pageindicatorview:0.2.0@aar'
     testCompile 'junit:junit:4.12'
 }
 
