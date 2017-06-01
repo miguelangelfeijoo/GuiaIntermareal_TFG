@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -22,17 +23,20 @@ import tfg.uniovi.es.guiaintermareal.model.Specie;
 import tfg.uniovi.es.guiaintermareal.ui.CategoryActivity;
 
 
-public class SpecieListAdapter extends Activity {
+
+public class SpecieListAdapter extends MainActivity {
 
     //View Holder For Recycler View
     public static class SpecieViewHolder extends RecyclerView.ViewHolder  {
         private final Context context;
         private int count;
-        DatabaseReference ref;
+        FirebaseDatabase database;
+        DatabaseReference ref, myRef;
 
         public SpecieViewHolder(final View itemView) {
             super(itemView);
             context = itemView.getContext();
+            database = FirebaseDatabase.getInstance();
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -47,7 +51,11 @@ public class SpecieListAdapter extends Activity {
                                 if(dataSnapshot.child("subcategory").getValue() != null ){
                                     //ES SUBCATEGORIA
                                     Specie sp = MainActivity.firebaseRecyclerAdapter.getItem(getAdapterPosition());
-                                    //loadCategoryData(String.valueOf(sp.getTitle()));
+                                    mCategoryRef = "Categorias/" + mCategoryTitle + sp.getTitle();;
+                                    myRef = database.getReference(mCategoryRef);
+
+                                    System.out.println("REFERENCIA 1 SLA: " + myRef);
+                                    //setRecyclerAdapter();
 
                                 }else{
                                     //NO ES SUBCATEGORIA
@@ -96,7 +104,6 @@ public class SpecieListAdapter extends Activity {
                     Picasso.with(ctx).load(image).into(post_image);
                 }
             });
-            //Picasso.with(ctx).load(image).into(post_image);
         }
     }
 }
