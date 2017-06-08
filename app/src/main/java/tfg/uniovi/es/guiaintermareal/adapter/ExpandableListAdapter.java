@@ -2,6 +2,7 @@ package tfg.uniovi.es.guiaintermareal.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,10 +78,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_header, null);
         }
+
+        String uri = "@drawable/" + mListDataHeader.get(groupPosition).substring(0,3).toLowerCase();
+        int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
+
         ImageView groupIco = (ImageView) convertView.findViewById(R.id.iconimage);
         TextView lblListHeader = (TextView) convertView.findViewById(R.id.submenu);
 
-        groupIco.setImageResource(R.mipmap.drawer_group);
+        Drawable res = mContext.getResources().getDrawable(imageResource);
+        groupIco.setImageDrawable(res);
+
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
         //lblListHeader.setText(headerTitle.getIconName());
