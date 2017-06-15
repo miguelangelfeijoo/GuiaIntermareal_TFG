@@ -9,16 +9,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.view.Menu;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -44,8 +44,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import tfg.uniovi.es.guiaintermareal.adapter.SpecieListAdapter;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
@@ -66,15 +68,19 @@ public class MainActivity extends RuntimePermission{
     private static final int REQUEST_PERMISSION = 10;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
 
-    public RecyclerView mSpecieList;
+    public static RecyclerView mSpecieList;
     public static FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder> firebaseRecyclerAdapter;
 
     View view_Group;
     ExpandableListAdapter mMenuAdapter;
     ExpandableListView expandableList;
     List<String> listDataHeader;
-    List<Object> listChildValues;
     HashMap<String, List<String>> listDataChild;
+
+    //Guardamos los arrays con las etiquetas de categorias/subcategorias para trabajar sobre ellas
+    public static List<String> fbCategories;
+    public static HashMap<String, List<String>> fbSubcategories;
+    public static HashMap<String, List<String>> fbChildren;
 
     private ProgressDialog mProgressDialog;
     public StorageReference mStorage;
@@ -109,6 +115,8 @@ public class MainActivity extends RuntimePermission{
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         expandableList = (ExpandableListView) findViewById(R.id.navigationmenu);
+        expandableList.setDivider(null);
+        expandableList.setGroupIndicator(null);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -120,6 +128,10 @@ public class MainActivity extends RuntimePermission{
         myRef = categoryRef.child(mCategoryTitle);
         categoryRef.keepSynced(true);
 
+        //Obtenemos los labels y los guardamos en los arrays declarados
+        /*fbCategories = getCategories();
+        fbSubcategories = getSubcategories();
+        fbChildren = getChildren();*/
 
         // ***** CARGAMOS LOS DATOS DEL DRAWER ******
         prepareDrawerListData();
@@ -136,7 +148,6 @@ public class MainActivity extends RuntimePermission{
                 Toast.makeText(MainActivity.this,
                         "Header: "+String.valueOf(expandableListView.getItemAtPosition(groupPosition)) +
                                 "\nItem: "+ String.valueOf(childPosition), Toast.LENGTH_SHORT).show();
-
                 view.setSelected(true);
                 if (view_Group != null) {
                     view_Group.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -150,14 +161,9 @@ public class MainActivity extends RuntimePermission{
         expandableList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long id) {
-                int count = expandableListView.getCount();
-                if (expandableListView.isGroupExpanded(groupPosition)){
-                    //Colapsado
-                }else {
+                if (!expandableListView.isGroupExpanded(groupPosition)) {
                     //Expandido
-                    for (int c = 0; c < count; c++) {
-                        loadCategoryData(String.valueOf(expandableListView.getItemAtPosition(groupPosition)));
-                    }
+                    loadCategoryData(String.valueOf(expandableListView.getItemAtPosition(groupPosition)));
                 }
                 return false;
             }
@@ -172,6 +178,7 @@ public class MainActivity extends RuntimePermission{
     @Override
     protected void onStart() {
         super.onStart();
+
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         setRecyclerAdapter();
@@ -211,9 +218,24 @@ public class MainActivity extends RuntimePermission{
     //**************************************************************************************************
     //                                DRAWER NAVIGATION & CONTENT
     //**************************************************************************************************
+    /*private void prepareDrawerListData(){
+        for(int pos = 0; pos < fbCategories.size(); pos++){
+            listDataHeader.add(fbCategories.get(pos));
+            List<String> heading = new ArrayList<>();
+
+            for(int posSub = 0; posSub < fbSubcategories.size(); posSub++){
+                heading.add(fbSubcategories.get(posSub).toString());
+            }
+
+
+            listDataChild.put(listDataHeader.get(pos), heading);// Header, Child data
+            pos++;
+
+            expandableList.setAdapter(mMenuAdapter);
+        }
+    }*/
     private void prepareDrawerListData() {
         listDataHeader = new ArrayList<>();
-        listChildValues = new ArrayList<>();
         listDataChild = new HashMap<>();
 
         categoryRef.addValueEventListener(  new ValueEventListener() {
@@ -225,10 +247,17 @@ public class MainActivity extends RuntimePermission{
                 for(DataSnapshot dsp : dataSnapshot.getChildren()){
                     listDataHeader.add(dsp.getKey());
                     List<String> heading = new ArrayList<>();
-                    for (DataSnapshot d : dsp.getChildren()) {
-                        heading.add(d.getKey());
+                    if (dsp.child("subcategory").getValue() == null) {
+                        for (DataSnapshot d : dsp.getChildren()) {
+                            String key = (String) d.getKey();
+                            if (!key.equals("subcategory")) {
+                                heading.add(d.getKey());
+                            }
+                        }
                     }
+                    //if (heading.size() > 0) {
                     listDataChild.put(listDataHeader.get(pos), heading);// Header, Child data
+                    //}
                     pos++;
                     expandableList.setAdapter(mMenuAdapter);
                 }
@@ -242,7 +271,7 @@ public class MainActivity extends RuntimePermission{
     }
 
     //**************************************************************************************************
-//                                         ACTIONBAR MENU
+    //                                         ACTIONBAR MENU
     //**************************************************************************************************
 
     @Override
@@ -365,18 +394,16 @@ public class MainActivity extends RuntimePermission{
         mSpecieList.getRecycledViewPool().clear();
         mSpecieList.stopScroll();
         mSpecieList.setAdapter(firebaseRecyclerAdapter);
-
     }
 
     public void loadCategoryData(String title){
         mCategoryTitle = title;
         setCategoryRef("Categorias/" + mCategoryTitle);
         myRef = database.getReference(getCategoryRef());
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        /*myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dsp : dataSnapshot.getChildren()){
-                    //Aqui salen Cefalopodos, Bivalvos, Quitones y Caracoles en el dsp
                     if(dsp.child("subcategory").getValue() != null ){
                         //ES SUBCATEGORIA
                     }else{
@@ -389,7 +416,7 @@ public class MainActivity extends RuntimePermission{
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
         setToolbarTitle();
         setRecyclerAdapter();
@@ -420,7 +447,136 @@ public class MainActivity extends RuntimePermission{
         Toast.makeText(getApplicationContext(), "Permisos condedidos!", Toast.LENGTH_LONG).show();
     }
 
+    //**************************************************************************************************
+    //                                  GET FIREBASE DATA LABELS
+    //**************************************************************************************************
+
+    public List<String> getCategories(){
+        fbCategories = new ArrayList<>();
+        categoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    fbCategories.add(dsp.getKey());
+                }
+                //printCategories();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        return fbCategories;
+    }
+
+    public HashMap<String, List<String>> getSubcategories(){
+        fbSubcategories = new HashMap<>();
+
+        categoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            List<String> listSubcategories = new ArrayList<>();
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    for (DataSnapshot dspSub : dsp.getChildren()) {
+                        if (dsp.child("subcategory").getValue() == null) {
+                            //ES SUBCATEGORIA
+                            listSubcategories.add(dspSub.getKey());
+                        }
+                    }
+
+                if (dsp.child("subcategory").getValue() == null) {
+                    fbSubcategories.put(dsp.getKey(), listSubcategories);
+                }
+                listSubcategories = new ArrayList<>();
+                }
+                printSubcategories();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        return fbSubcategories;
+    }
+
+    public HashMap<String, List<String>> getChildren(){
+        fbChildren = new HashMap<>();
+
+        categoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            List<String> listChildren = new ArrayList<>();
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                    for (DataSnapshot dspSub : dsp.getChildren()) {
+                        String spKey = (String) dspSub.getKey();
+                        if (dsp.child("subcategory").getValue() != null) {
+                            //NO ES SUBCATEGORIA
+                            if(!spKey.equals("subcategory")) {
+                                listChildren.add(spKey);
+                            }
+                        }else{
+                            //ES SUBCATEGORIA
+                            for(DataSnapshot dspSpecie : dspSub.getChildren()){
+                                spKey = (String) dspSpecie.getKey();
+                                if (spKey.equals("image") || spKey.equals("subcategory") || spKey.equals("title")) {
+
+                                }else{
+                                    listChildren.add(spKey);
+                                }
+                            }
+                            fbChildren.put(dspSub.getKey(), listChildren);
+                            listChildren = new ArrayList<>();
+                        }
+                    }
+
+                    if (dsp.child("subcategory").getValue() != null) {
+                        fbChildren.put(dsp.getKey(), listChildren);
+                    }
+                    listChildren = new ArrayList<>();
+                }
+                //printChildren();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        return fbChildren;
+    }
+
+    public void printCategories(){
+        for(int pos=0; pos < fbCategories.size(); pos++){
+            System.out.println("********** FBCategories: " + fbCategories.get(pos));
+        }
+    }
+
+    public void printSubcategories(){
+        System.out.println("--------------------------------------");
+        System.out.println("--------------------------------------");
+        System.out.println("--------------------------------------");
+
+        Iterator it = fbSubcategories.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry e = (Map.Entry) it.next();
+            System.out.println("***** FBSubcategories: " + e.getKey() + " " + e.getValue());
+        }
+
+    }
+
+    public void printChildren(){
+        System.out.println("--------------------------------------");
+        System.out.println("--------------------------------------");
+        System.out.println("--------------------------------------");
+
+        Iterator it = fbChildren.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry e = (Map.Entry) it.next();
+            System.out.println("***** FBChildren: " + e.getKey() + " " + e.getValue());
+        }
+    }
+
 }
-
-
 
