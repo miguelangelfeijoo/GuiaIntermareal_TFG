@@ -1,8 +1,10 @@
 package tfg.uniovi.es.guiaintermareal.ui;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -141,7 +144,12 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         Intent intent;
         switch (v.getId()) {
             case R.id.fab:
-                morph.show();
+                if((ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) &&
+                    (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)){
+                        morph.show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Es necesario conceder los permisos para usar el botón!", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case R.id.camera:
