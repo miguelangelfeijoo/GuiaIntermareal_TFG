@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,8 +43,21 @@ public class CarouselAdapter extends PagerAdapter{
     public Object instantiateItem(ViewGroup container, final int position){
         View itemView = layoutInflater.inflate(R.layout.pager_item, container, false);
 
-        ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
-        Picasso.with(context).load(images.get(position)).into(imageView);
+        final ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
+        ImageView.ScaleType st = ImageView.ScaleType.FIT_XY;
+        imageView.setScaleType(st);
+        //Picasso.with(context).load(images.get(position)).into(imageView);
+        Picasso.with(context).load(images.get(position)).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
+            @Override
+            public void onSuccess() {
+                //Nada que hacer aqui
+            }
+
+            @Override
+            public void onError() {
+                Picasso.with(context).load(images.get(position)).into(imageView);
+            }
+        });
 
         container.addView(itemView);
         return itemView;

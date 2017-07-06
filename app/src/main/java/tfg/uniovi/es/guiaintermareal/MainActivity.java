@@ -3,7 +3,6 @@ package tfg.uniovi.es.guiaintermareal;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,6 +29,9 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,10 +46,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import tfg.uniovi.es.guiaintermareal.adapter.SpecieListAdapter;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
@@ -70,21 +70,19 @@ public class MainActivity extends RuntimePermission{
 
     public static RecyclerView mSpecieList;
     public static FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder> firebaseRecyclerAdapter;
+    public static Toolbar toolbar;
 
-    View view_Group;
     ExpandableListAdapter mMenuAdapter;
     ExpandableListView expandableList;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
 
-    //Guardamos los arrays con las etiquetas de categorias/subcategorias para trabajar sobre ellas
-    public static List<String> fbCategories;
-    public static HashMap<String, List<String>> fbSubcategories;
-    public static HashMap<String, List<String>> fbChildren;
-
     private ProgressDialog mProgressDialog;
     public StorageReference mStorage;
+    FirebaseAuth mAuth;
     Uri picUri;
+
+    private DrawerLayout mDrawer;
 
     /* Variables de acceso a Firebase */
     FirebaseDatabase database;
@@ -101,25 +99,27 @@ public class MainActivity extends RuntimePermission{
 
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(mCategoryTitle);
         setSupportActionBar(toolbar);
 
         mStorage = FirebaseStorage.getInstance().getReference();
         mProgressDialog = new ProgressDialog(this);
 
+        mAuth = FirebaseAuth.getInstance();
+
         requestAppPermissions(new String[]{
                         android.Manifest.permission.CAMERA,
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 R.string.msg,REQUEST_PERMISSION);
 
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         expandableList = (ExpandableListView) findViewById(R.id.navigationmenu);
         expandableList.setDivider(null);
         expandableList.setGroupIndicator(null);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
 
         // Send a Query to the database
@@ -127,11 +127,8 @@ public class MainActivity extends RuntimePermission{
         categoryRef = database.getReference().child("Categorias");
         myRef = categoryRef.child(mCategoryTitle);
         categoryRef.keepSynced(true);
+        myRef.keepSynced(true);
 
-        //Obtenemos los labels y los guardamos en los arrays declarados
-        /*fbCategories = getCategories();
-        fbSubcategories = getSubcategories();
-        fbChildren = getChildren();*/
 
         // ***** CARGAMOS LOS DATOS DEL DRAWER ******
         prepareDrawerListData();
@@ -145,15 +142,9 @@ public class MainActivity extends RuntimePermission{
                                         View view,
                                         int groupPosition,
                                         int childPosition, long id) {
-                Toast.makeText(MainActivity.this,
-                        "Header: "+String.valueOf(expandableListView.getItemAtPosition(groupPosition)) +
-                                "\nItem: "+ String.valueOf(childPosition), Toast.LENGTH_SHORT).show();
-                view.setSelected(true);
-                if (view_Group != null) {
-                    view_Group.setBackgroundColor(Color.parseColor("#ffffff"));
-                }
+                loadSubcategoryData(String.valueOf(expandableListView.getItemAtPosition(groupPosition)),mMenuAdapter.getChild(groupPosition, childPosition).toString());
                 expandableListView.collapseGroup(groupPosition);
-                drawer.closeDrawers();
+                mDrawer.closeDrawers();
                 return false;
 
             }
@@ -161,10 +152,13 @@ public class MainActivity extends RuntimePermission{
         expandableList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long id) {
-                if (!expandableListView.isGroupExpanded(groupPosition)) {
+                //if (!expandableListView.isGroupExpanded(groupPosition)) {
                     //Expandido
                     loadCategoryData(String.valueOf(expandableListView.getItemAtPosition(groupPosition)));
-                }
+                    if (listDataChild.get(expandableListView.getItemAtPosition(groupPosition)).isEmpty()){
+                        mDrawer.closeDrawers();
+                    }
+                //}
                 return false;
             }
         });
@@ -179,16 +173,35 @@ public class MainActivity extends RuntimePermission{
     protected void onStart() {
         super.onStart();
 
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            signInAnonymously();
+        }
+
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         setRecyclerAdapter();
     }
 
+    private void signInAnonymously() {
+        mAuth.signInAnonymously().addOnSuccessListener(this, new  OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                // do your stuff
+            }
+        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                    }
+                });
+    }
+
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
         } else {
             new AlertDialog.Builder(this).setIcon(R.mipmap.ic_info_outline).setTitle(R.string.exit_title)
                     .setMessage(R.string.exit_message)
@@ -218,27 +231,11 @@ public class MainActivity extends RuntimePermission{
     //**************************************************************************************************
     //                                DRAWER NAVIGATION & CONTENT
     //**************************************************************************************************
-    /*private void prepareDrawerListData(){
-        for(int pos = 0; pos < fbCategories.size(); pos++){
-            listDataHeader.add(fbCategories.get(pos));
-            List<String> heading = new ArrayList<>();
-
-            for(int posSub = 0; posSub < fbSubcategories.size(); posSub++){
-                heading.add(fbSubcategories.get(posSub).toString());
-            }
-
-
-            listDataChild.put(listDataHeader.get(pos), heading);// Header, Child data
-            pos++;
-
-            expandableList.setAdapter(mMenuAdapter);
-        }
-    }*/
-    private void prepareDrawerListData() {
+    public void prepareDrawerListData() {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
 
-        categoryRef.addValueEventListener(  new ValueEventListener() {
+        categoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int pos = 0;
@@ -247,17 +244,16 @@ public class MainActivity extends RuntimePermission{
                 for(DataSnapshot dsp : dataSnapshot.getChildren()){
                     listDataHeader.add(dsp.getKey());
                     List<String> heading = new ArrayList<>();
-                    if (dsp.child("subcategory").getValue() == null) {
-                        for (DataSnapshot d : dsp.getChildren()) {
-                            String key = (String) d.getKey();
-                            if (!key.equals("subcategory")) {
+                    for (DataSnapshot d : dsp.getChildren()) {
+                        String key = (String) d.getKey();
+                        if (! (d.hasChild("subcategory"))) {
+                            if (!key.equals("subcategory") && !(key.equals("image")) && !(key.equals("title"))) {
                                 heading.add(d.getKey());
                             }
                         }
                     }
-                    //if (heading.size() > 0) {
                     listDataChild.put(listDataHeader.get(pos), heading);// Header, Child data
-                    //}
+
                     pos++;
                     expandableList.setAdapter(mMenuAdapter);
                 }
@@ -279,7 +275,7 @@ public class MainActivity extends RuntimePermission{
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-
+        searchView.setQueryHint("Busqueda por habitat...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
@@ -355,9 +351,9 @@ public class MainActivity extends RuntimePermission{
     }
 
     /** Create a File for saving an image */
-    private  File getOutputMediaFile(int type){
+    private File getOutputMediaFile(int type){
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "GuiaIntermareal");
+                Environment.DIRECTORY_PICTURES), "Intermareal");
 
         /**Create the storage directory if it does not exist*/
         if (! mediaStorageDir.exists()){
@@ -381,6 +377,21 @@ public class MainActivity extends RuntimePermission{
     //**************************************************************************************************
     //                                  RECYCLERVIEW FOR DATA
     //**************************************************************************************************
+    public void setRecyclerAdapter(int count){
+        firebaseRecyclerAdapter =
+                new FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder>(Specie.class, R.layout.design_row, SpecieListAdapter.SpecieViewHolder.class, myRef.limitToFirst(count)) {
+
+                    @Override
+                    protected void populateViewHolder(SpecieListAdapter.SpecieViewHolder viewHolder, Specie model, int position) {
+                        viewHolder.setTitle(model.getTitle());
+                        viewHolder.setImage(getApplicationContext(), model.getImage());
+                    }
+                };
+        mSpecieList.getRecycledViewPool().clear();
+        mSpecieList.stopScroll();
+        mSpecieList.setAdapter(firebaseRecyclerAdapter);
+    }
+
     public void setRecyclerAdapter(){
         firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder>(Specie.class, R.layout.design_row, SpecieListAdapter.SpecieViewHolder.class, myRef) {
@@ -400,26 +411,33 @@ public class MainActivity extends RuntimePermission{
         mCategoryTitle = title;
         setCategoryRef("Categorias/" + mCategoryTitle);
         myRef = database.getReference(getCategoryRef());
-        /*myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        setToolbarTitle();
+        setRecyclerAdapter();
+    }
+
+    public void loadSubcategoryData(String category, final String subcategory){
+        mCategoryTitle = category+ "/" +subcategory;
+        setCategoryRef("Categorias/" + mCategoryTitle);
+        myRef = database.getReference(getCategoryRef());
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            int count;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dsp : dataSnapshot.getChildren()){
-                    if(dsp.child("subcategory").getValue() != null ){
-                        //ES SUBCATEGORIA
-                    }else{
-                        //NO ES SUBCATEGORIA
-                    }
-                }
+                    count = (int) dataSnapshot.getChildrenCount();
+                    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                    toolbar.setTitle(subcategory);
+                    //Filtrar los resultados de la referencia para no mostrar
+                    //los dos ultimos referentes a los strings image y title
+                    setRecyclerAdapter(count-2);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });*/
-
-        setToolbarTitle();
-        setRecyclerAdapter();
+        });
     }
 
     //**************************************************************************************************
@@ -445,137 +463,6 @@ public class MainActivity extends RuntimePermission{
     public void onPermissionsGranted(int requestCode) {
         //Do anything when permisson granted
         Toast.makeText(getApplicationContext(), "Permisos condedidos!", Toast.LENGTH_LONG).show();
-    }
-
-    //**************************************************************************************************
-    //                                  GET FIREBASE DATA LABELS
-    //**************************************************************************************************
-
-    public List<String> getCategories(){
-        fbCategories = new ArrayList<>();
-        categoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    fbCategories.add(dsp.getKey());
-                }
-                //printCategories();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        return fbCategories;
-    }
-
-    public HashMap<String, List<String>> getSubcategories(){
-        fbSubcategories = new HashMap<>();
-
-        categoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            List<String> listSubcategories = new ArrayList<>();
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    for (DataSnapshot dspSub : dsp.getChildren()) {
-                        if (dsp.child("subcategory").getValue() == null) {
-                            //ES SUBCATEGORIA
-                            listSubcategories.add(dspSub.getKey());
-                        }
-                    }
-
-                if (dsp.child("subcategory").getValue() == null) {
-                    fbSubcategories.put(dsp.getKey(), listSubcategories);
-                }
-                listSubcategories = new ArrayList<>();
-                }
-                printSubcategories();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        return fbSubcategories;
-    }
-
-    public HashMap<String, List<String>> getChildren(){
-        fbChildren = new HashMap<>();
-
-        categoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            List<String> listChildren = new ArrayList<>();
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                    for (DataSnapshot dspSub : dsp.getChildren()) {
-                        String spKey = (String) dspSub.getKey();
-                        if (dsp.child("subcategory").getValue() != null) {
-                            //NO ES SUBCATEGORIA
-                            if(!spKey.equals("subcategory")) {
-                                listChildren.add(spKey);
-                            }
-                        }else{
-                            //ES SUBCATEGORIA
-                            for(DataSnapshot dspSpecie : dspSub.getChildren()){
-                                spKey = (String) dspSpecie.getKey();
-                                if (spKey.equals("image") || spKey.equals("subcategory") || spKey.equals("title")) {
-
-                                }else{
-                                    listChildren.add(spKey);
-                                }
-                            }
-                            fbChildren.put(dspSub.getKey(), listChildren);
-                            listChildren = new ArrayList<>();
-                        }
-                    }
-
-                    if (dsp.child("subcategory").getValue() != null) {
-                        fbChildren.put(dsp.getKey(), listChildren);
-                    }
-                    listChildren = new ArrayList<>();
-                }
-                //printChildren();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        return fbChildren;
-    }
-
-    public void printCategories(){
-        for(int pos=0; pos < fbCategories.size(); pos++){
-            System.out.println("********** FBCategories: " + fbCategories.get(pos));
-        }
-    }
-
-    public void printSubcategories(){
-        System.out.println("--------------------------------------");
-        System.out.println("--------------------------------------");
-        System.out.println("--------------------------------------");
-
-        Iterator it = fbSubcategories.entrySet().iterator();
-        while(it.hasNext()){
-            Map.Entry e = (Map.Entry) it.next();
-            System.out.println("***** FBSubcategories: " + e.getKey() + " " + e.getValue());
-        }
-
-    }
-
-    public void printChildren(){
-        System.out.println("--------------------------------------");
-        System.out.println("--------------------------------------");
-        System.out.println("--------------------------------------");
-
-        Iterator it = fbChildren.entrySet().iterator();
-        while(it.hasNext()){
-            Map.Entry e = (Map.Entry) it.next();
-            System.out.println("***** FBChildren: " + e.getKey() + " " + e.getValue());
-        }
     }
 
 }

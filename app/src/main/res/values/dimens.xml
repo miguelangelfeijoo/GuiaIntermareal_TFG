@@ -7,7 +7,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="imageDetailHeight">250dp</dimen>
-    <dimen name="imageDetailHeight_landscape">100dp</dimen>
+    <dimen name="imageDetailHeight_landscape">240dp</dimen>
+    <dimen name="imageDetailWidth_landscape">180dp</dimen>
     <dimen name="titleTextSize">34sp</dimen>
     <dimen name="subcategoriesTextSize">20sp</dimen>
     <dimen name="contentMarginBottom">8dp</dimen>

@@ -11,6 +11,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import tfg.uniovi.es.guiaintermareal.R;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private List<String> mListDataHeader; // header titles
+    public StorageReference storage;
 
     // child data in format of header title, child title
     private HashMap<String, List<String>> mListDataChild;
@@ -71,18 +74,38 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String headerTitle = (String) getGroup(groupPosition);
+        storage = FirebaseStorage.getInstance().getReference();
+
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this.mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_header, null);
         }
 
-        String uri = "@drawable/" + mListDataHeader.get(groupPosition).substring(0,3).toLowerCase();
+        /*final ImageView groupIco = (ImageView) convertView.findViewById(R.id.iconimage);
+        StorageReference iconRef = storage.child("Iconos/" + mListDataHeader.get(groupPosition).substring(0,3).toLowerCase() + ".png");
+        iconRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(final Uri uri) {
+                Picasso.with(mContext).load(uri).networkPolicy(NetworkPolicy.OFFLINE).into(groupIco, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        //Nada que hacer aqui
+                    }
+
+                    @Override
+                    public void onError() {
+                        Picasso.with(mContext).load(uri).into(groupIco);
+                    }
+                });
+            }
+        });*/
+        String uri = "@drawable/" + mListDataHeader.get(groupPosition).substring(0,4).toLowerCase();
         int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
 
-        ImageView groupIco = (ImageView) convertView.findViewById(R.id.iconimage);
+        final ImageView groupIco = (ImageView) convertView.findViewById(R.id.iconimage);
         TextView lblListHeader = (TextView) convertView.findViewById(R.id.submenu);
 
         Drawable res = mContext.getResources().getDrawable(imageResource);
@@ -90,7 +113,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
-        //lblListHeader.setText(headerTitle.getIconName());
         return convertView;
     }
 

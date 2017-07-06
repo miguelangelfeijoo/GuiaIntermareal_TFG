@@ -13,13 +13,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,14 +53,14 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     public StorageReference mStorage;
     Uri picUri;
 
-    //int images[] = {R.drawable.imagen1, R.drawable.imagen2, R.drawable.imagen3};
     ViewPager viewPager;
     CarouselAdapter mCarouselAdapter;
 
     String nombre, description, imageUrl, taxonomy, ecology, habitat;
+    long size;
     ArrayList<String> references;
     private FABToolbarLayout morph;
-    TextView vTitle, vDescription, vEcology, vTaxonomy, vHabitat, vReferences;
+    TextView vTitle, vDescription, vEcology, vTaxonomy, vHabitat, vSize, vReferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +69,10 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getIntent().getStringExtra("title"));
-        //setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ArrayList<String> carousel = getIntent().getStringArrayListExtra("carousel");
-        System.out.println("CAROUSEL: " + carousel.get(0));
 
         mStorage = FirebaseStorage.getInstance().getReference();
 
@@ -83,10 +83,10 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         PageIndicatorView pageIndicatorView = (PageIndicatorView) findViewById(R.id.pageIndicatorView);
         pageIndicatorView.setViewPager(viewPager);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        toggle.syncState();
+        toggle.syncState();*/
 
         mProgressDialog = new ProgressDialog(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -110,6 +110,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         imageUrl = getIntent().getStringExtra("image");
         taxonomy = getIntent().getStringExtra("taxonomy");
         habitat = getIntent().getStringExtra("habitat");
+        size = getIntent().getLongExtra("size", 0);
         references = getIntent().getStringArrayListExtra("references");
 
         vTitle = (TextView) findViewById(R.id.vTitle);
@@ -117,6 +118,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         vEcology = (TextView) findViewById(R.id.vEcology);
         vTaxonomy = (TextView) findViewById(R.id.vTaxonomy);
         vHabitat = (TextView) findViewById(R.id.vHabitat);
+        vSize = (TextView) findViewById(R.id.vSize);
         vReferences = (TextView) findViewById(R.id.vReferences);
 
         vTitle.setText(nombre);
@@ -124,6 +126,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         vEcology.setText(ecology);
         vTaxonomy.setText(taxonomy);
         vHabitat.setText(habitat);
+        vSize.setText(String.valueOf(size));
 
         StringBuilder linksList = new StringBuilder();
         for(int i=0; i<references.size();i++){
@@ -133,10 +136,21 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         vReferences.setText(linksList);
     }
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		// Respond to the action bar's Up/Home button
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        //getMenuInflater().inflate(R.menu.main, menu);
+        return false;
     }
 
     @Override
@@ -229,7 +243,6 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(CategoryActivity.this, "Es necesario tener conexion a Internet para subir la foto!!", Toast.LENGTH_LONG).show();
         }
 
-
     }
 
     public static boolean networkConnected(Context ctx) {
@@ -241,7 +254,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     /** Create a File for saving an image */
     private  File getOutputMediaFile(int type){
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "GuiaIntermareal");
+                Environment.DIRECTORY_PICTURES), "Intermareal");
 
         /**Create the storage directory if it does not exist*/
         if (! mediaStorageDir.exists()){

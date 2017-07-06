@@ -1,5 +1,6 @@
 package tfg.uniovi.es.guiaintermareal.ui;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,7 +46,31 @@ public class SearchActivity extends AppCompatActivity {
         // Send a Query to the database
         database = FirebaseDatabase.getInstance();
         habitatRef = database.getReference().child("Habitat");
+        habitatRef.keepSynced(true);
         myRef = habitatRef.child(query);
+
+
+        ImageView img = (ImageView) findViewById(R.id.habitatImage);
+
+        Drawable res ;
+        switch(query){
+            case "Rio":
+                res = getApplicationContext().getResources().getDrawable(R.drawable.rio);
+                img.setImageDrawable(res);
+                break;
+            case "Pedrero":
+                res = getApplicationContext().getResources().getDrawable(R.drawable.pedrero);
+                img.setImageDrawable(res);
+                break;
+            case "Mar":
+                res = getApplicationContext().getResources().getDrawable(R.drawable.mar);
+                img.setImageDrawable(res);
+                break;
+            default:
+                res = getApplicationContext().getResources().getDrawable(R.drawable.no_encontrado);
+                img.setImageDrawable(res);
+                break;
+        }
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.search_list);
         recyclerView.setHasFixedSize(false);

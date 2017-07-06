@@ -1,6 +1,5 @@
 package tfg.uniovi.es.guiaintermareal.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,7 +21,6 @@ import tfg.uniovi.es.guiaintermareal.MainActivity;
 import tfg.uniovi.es.guiaintermareal.R;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
 import tfg.uniovi.es.guiaintermareal.ui.CategoryActivity;
-
 
 
 public class SpecieListAdapter extends MainActivity {
@@ -42,21 +41,14 @@ public class SpecieListAdapter extends MainActivity {
                 @Override
                 public void onClick(View v) {
                     count = MainActivity.firebaseRecyclerAdapter.getItemCount();
-                    ref = MainActivity.firebaseRecyclerAdapter.getRef(0);
+                    ref = MainActivity.firebaseRecyclerAdapter.getRef(getAdapterPosition());
                     ref.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                System.out.println("*******SUBCATEGORY: "+dataSnapshot.child("subcategory"));
-                                if(dataSnapshot.child("subcategory").getValue() != null ){
+                                if (! (dataSnapshot.hasChild("subcategory"))) {
                                     //ES SUBCATEGORIA
-                                    Specie sp = MainActivity.firebaseRecyclerAdapter.getItem(getAdapterPosition());
-                                    mCategoryRef = "Categorias/" + mCategoryTitle + sp.getTitle();;
-                                    myRef = database.getReference(mCategoryRef);
-
-                                    System.out.println("REFERENCIA 1 SLA: " + myRef);
-                                    //setRecyclerAdapter();
-
+                                    String key = dataSnapshot.getKey();
+                                    loadSubcategoryData(ref.getParent().getKey(), key);
                                 }else{
                                     //NO ES SUBCATEGORIA
                                     Intent intent = null;
@@ -65,6 +57,7 @@ public class SpecieListAdapter extends MainActivity {
                                         intent = new Intent(context, CategoryActivity.class);
                                         intent.putExtra("title", sp.getTitle());
                                         intent.putExtra("description", sp.getDescription());
+                                        intent.putExtra("size", sp.getSize());
                                         intent.putExtra("ecology", sp.getEcology());
                                         intent.putExtra("image", sp.getImage());
                                         intent.putExtra("habitat", sp.getHabitat());
@@ -74,7 +67,6 @@ public class SpecieListAdapter extends MainActivity {
                                     }
                                     context.startActivity(intent);
                                 }
-
                         }
 
                         @Override
@@ -87,10 +79,34 @@ public class SpecieListAdapter extends MainActivity {
             });
         }
 
+        private void loadSubcategoryData(String category, final String subcategory){
+            mCategoryTitle = category+ "/" +subcategory;
+            setCategoryRef("Categorias/" + mCategoryTitle);
+            myRef = database.getReference(mCategoryRef);
+
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                int count;
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    count = (int) dataSnapshot.getChildrenCount();
+                    MainActivity.toolbar.setTitle(subcategory);
+                    //Filtrar los resultados de la referencia para no mostrar
+                    //los dos ultimos referentes a los strings image y title
+                    setRecyclerAdapter(count-2);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
         public void setTitle(String title){
             TextView post_title = (TextView)itemView.findViewById(R.id.titleText);
             post_title.setText(title);
         }
+
         public void setImage(final Context ctx , final String image){
             final ImageView post_image = (ImageView)itemView.findViewById(R.id.imageViewy);
             Picasso.with(ctx).load(image).networkPolicy(NetworkPolicy.OFFLINE).into(post_image, new Callback() {
@@ -104,6 +120,25 @@ public class SpecieListAdapter extends MainActivity {
                     Picasso.with(ctx).load(image).into(post_image);
                 }
             });
+        }
+
+        public void setCategoryRef(String ref){
+            mCategoryRef = ref;
+        }
+
+        public void setRecyclerAdapter(int count){
+            firebaseRecyclerAdapter =
+                    new FirebaseRecyclerAdapter<Specie, SpecieListAdapter.SpecieViewHolder>(Specie.class, R.layout.design_row, SpecieListAdapter.SpecieViewHolder.class, myRef.limitToFirst(count)) {
+
+                        @Override
+                        protected void populateViewHolder(SpecieListAdapter.SpecieViewHolder viewHolder, Specie model, int position) {
+                            viewHolder.setTitle(model.getTitle());
+                            viewHolder.setImage(context, model.getImage());
+                        }
+                    };
+            mSpecieList.getRecycledViewPool().clear();
+            mSpecieList.stopScroll();
+            mSpecieList.setAdapter(firebaseRecyclerAdapter);
         }
     }
 }

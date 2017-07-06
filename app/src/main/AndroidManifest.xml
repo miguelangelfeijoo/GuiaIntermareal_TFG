@@ -39,26 +39,35 @@
         <activity
             android:name=".ui.CategoryActivity"
             android:label="@string/category"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
         <activity
-            android:name=".adapter.SpecieListAdapter"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".ui.MapsActivity"
+            android:label="@string/title_activity_maps" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ui.MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity
             android:name=".ui.AboutActivity"
             android:label="@string/action_about"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@android:style/Theme.Dialog"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
         <activity
             android:name=".ui.SearchActivity"
             android:label="@string/title_activity_search"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
