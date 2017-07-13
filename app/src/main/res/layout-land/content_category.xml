@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/content_category"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="tfg.uniovi.es.guiaintermareal.ui.CategoryActivity"
+    tools:showIn="@layout/activity_category">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="180dp">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.rd.PageIndicatorView
+            android:id="@+id/pageIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            app:piv_viewPager="@id/viewPager"
+            app:piv_interactiveAnimation="true"
+            app:piv_animationType="color"
+            app:piv_dynamicCount="true"
+            android:layout_marginBottom="5dp"
+            app:piv_selectedColor="@color/colorAccent"
+            app:piv_unselectedColor="@color/cardview_light_background"/>
+
+    </RelativeLayout>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:divider="?android:dividerVertical"
+            android:baselineAligned="false"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/contentPadding"
+                android:paddingEnd="@dimen/paddingExt"
+                android:paddingBottom="@dimen/paddingExt">
+
+                <TextView
+                    android:id="@+id/vTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/titleTextSize"/>
+
+                <TextView
+                    android:id="@+id/vTaxonomyLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/contentMarginBottom"
+                    android:text="@string/taxonomyLabel"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/subcategoriesTextSize"/>
+
+                <TextView
+                    android:id="@+id/vTaxonomy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/vDescriptionLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/descriptionLabel"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/subcategoriesTextSize"/>
+
+                <TextView
+                    android:id="@+id/vDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/vHabitatLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/contentMarginBottom"
+                    android:text="@string/habitatLabel"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/subcategoriesTextSize"/>
+
+                <TextView
+                    android:id="@+id/vHabitat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/contentPadding"
+                android:paddingEnd="@dimen/paddingExt"
+                android:paddingBottom="@dimen/paddingExt">
+
+                <TextView
+                    android:id="@+id/vEcologyLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ecologyLabel"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/subcategoriesTextSize"/>
+
+                <TextView
+                    android:id="@+id/vEcology"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/vSizeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sizeLabel"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/subcategoriesTextSize"/>
+
+                <TextView
+                    android:id="@+id/vSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/vReferencesLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/contentMarginBottom"
+                    android:text="@string/referencesLabel"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/subcategoriesTextSize"/>
+
+                <TextView
+                    android:id="@+id/vReferences"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:lineSpacingExtra="8dp"
+                    android:paddingBottom="40dp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

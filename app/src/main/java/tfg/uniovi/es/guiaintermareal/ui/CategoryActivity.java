@@ -13,7 +13,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -42,7 +40,7 @@ import java.util.Locale;
 import tfg.uniovi.es.guiaintermareal.R;
 import tfg.uniovi.es.guiaintermareal.adapter.CarouselAdapter;
 
-import static tfg.uniovi.es.guiaintermareal.MainActivity.mCategoryRef;
+import static tfg.uniovi.es.guiaintermareal.MainActivity.mCategoryTitle;
 
 public class CategoryActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -56,8 +54,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     ViewPager viewPager;
     CarouselAdapter mCarouselAdapter;
 
-    String nombre, description, imageUrl, taxonomy, ecology, habitat;
-    long size;
+    String nombre, description, imageUrl, taxonomy, ecology, habitat, size;
     ArrayList<String> references;
     private FABToolbarLayout morph;
     TextView vTitle, vDescription, vEcology, vTaxonomy, vHabitat, vSize, vReferences;
@@ -83,25 +80,20 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         PageIndicatorView pageIndicatorView = (PageIndicatorView) findViewById(R.id.pageIndicatorView);
         pageIndicatorView.setViewPager(viewPager);
 
-        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        toggle.syncState();*/
-
         mProgressDialog = new ProgressDialog(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         morph = (FABToolbarLayout) findViewById(R.id.fabtoolbar);
 
-        View gallery, camera, map, exit;
+        View gallery, camera, exit;
         gallery = findViewById(R.id.gallery);
         camera = findViewById(R.id.camera);
-        map = findViewById(R.id.map);
+        //map = findViewById(R.id.map);
         exit = findViewById(R.id.exit);
 
         fab.setOnClickListener(this);
         gallery.setOnClickListener(this);
         camera.setOnClickListener(this);
-        map.setOnClickListener(this);
+        //map.setOnClickListener(this);
         exit.setOnClickListener(this);
 
         nombre = getIntent().getStringExtra("title");
@@ -110,7 +102,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         imageUrl = getIntent().getStringExtra("image");
         taxonomy = getIntent().getStringExtra("taxonomy");
         habitat = getIntent().getStringExtra("habitat");
-        size = getIntent().getLongExtra("size", 0);
+        size = getIntent().getStringExtra("size");
         references = getIntent().getStringArrayListExtra("references");
 
         vTitle = (TextView) findViewById(R.id.vTitle);
@@ -126,7 +118,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
         vEcology.setText(ecology);
         vTaxonomy.setText(taxonomy);
         vHabitat.setText(habitat);
-        vSize.setText(String.valueOf(size));
+        vSize.setText(size);
 
         StringBuilder linksList = new StringBuilder();
         for(int i=0; i<references.size();i++){
@@ -141,7 +133,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
 		switch (item.getItemId()) {
 		// Respond to the action bar's Up/Home button
 		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
+            onBackPressed();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -150,7 +142,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.main, menu);
-        return false;
+        return true;
     }
 
     @Override
@@ -182,13 +174,13 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
                 break;
 
-            case R.id.map:
+            /*case R.id.map:
                 intent = new Intent(CategoryActivity.this, MapsActivity.class);
 
                 intent.putExtra("ref", mCategoryRef);
                 intent.putExtra("title", getIntent().getStringExtra("title"));
                 startActivity(intent);
-                break;
+                break;*/
 
             case R.id.exit:
                 break;
@@ -207,7 +199,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
                 if(TOOLBAR_ACTION_TYPE == "gallery") {
                     //La imagen se obtiene de la galeria
                     uri = data.getData();
-                    StorageReference filepath = mStorage.child("A confirmar").child(nombre).child(uri.getLastPathSegment());
+                    StorageReference filepath = mStorage.child("A confirmar").child(mCategoryTitle).child(nombre).child(uri.getLastPathSegment());
                     filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -223,7 +215,7 @@ public class CategoryActivity extends AppCompatActivity implements View.OnClickL
                 }else{
                     //La imagen se obtiene de la camara
                     uri = picUri;
-                    StorageReference filepath = mStorage.child("A confirmar").child(nombre).child(uri.getLastPathSegment());
+                    StorageReference filepath = mStorage.child("A confirmar").child(mCategoryTitle).child(nombre).child(uri.getLastPathSegment());
                     filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

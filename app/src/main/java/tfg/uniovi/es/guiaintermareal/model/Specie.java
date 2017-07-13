@@ -1,21 +1,21 @@
 package tfg.uniovi.es.guiaintermareal.model;
 
-import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import java.util.ArrayList;
 
+@IgnoreExtraProperties
 public class Specie {
-    private String title, description, ecology, image, habitat, taxonomy;
-    private long size;
+    private String title, description, ecology, image, habitat, taxonomy, size;
     private ArrayList<String> references;
     private ArrayList<String> carousel;
-    @Exclude
     private boolean subcategory;
 
 
     public Specie() {
     }
 
-    public Specie(String title, String description, String ecology, String image, String habitat, String taxonomy, long size, ArrayList<String> references, ArrayList<String> carousel, boolean subcategory) {
+    public Specie(String title, String description, String ecology, String image, String habitat, String taxonomy, String size, ArrayList<String> references, ArrayList<String> carousel, boolean subcategory) {
         this.title = title;
         this.description = description;
         this.ecology = ecology;
@@ -68,8 +68,9 @@ public class Specie {
         return carousel;
     }
 
-    public long getSize() {
+    public String getSize() {
         return size;
     }
+
 }
 

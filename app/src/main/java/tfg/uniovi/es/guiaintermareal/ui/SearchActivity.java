@@ -2,8 +2,6 @@ package tfg.uniovi.es.guiaintermareal.ui;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,14 +32,12 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         String query = getIntent().getStringExtra("query");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         query = Character.toUpperCase(query.charAt(0)) + query.substring(1).toLowerCase();
-        toolbar.setTitle(query);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        toggle.syncState();
+        toolbar.setTitle("Especies de " + query);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Send a Query to the database
         database = FirebaseDatabase.getInstance();
@@ -57,20 +53,24 @@ public class SearchActivity extends AppCompatActivity {
             case "Rio":
                 res = getApplicationContext().getResources().getDrawable(R.drawable.rio);
                 img.setImageDrawable(res);
+                img.setScaleType(ImageView.ScaleType.FIT_XY);
                 break;
             case "Pedrero":
                 res = getApplicationContext().getResources().getDrawable(R.drawable.pedrero);
                 img.setImageDrawable(res);
+                img.setScaleType(ImageView.ScaleType.FIT_XY);
                 break;
             case "Mar":
                 res = getApplicationContext().getResources().getDrawable(R.drawable.mar);
                 img.setImageDrawable(res);
+                img.setScaleType(ImageView.ScaleType.FIT_XY);
                 break;
             default:
                 res = getApplicationContext().getResources().getDrawable(R.drawable.no_encontrado);
                 img.setImageDrawable(res);
                 break;
         }
+
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.search_list);
         recyclerView.setHasFixedSize(false);

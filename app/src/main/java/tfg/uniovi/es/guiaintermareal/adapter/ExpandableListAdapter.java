@@ -7,14 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import tfg.uniovi.es.guiaintermareal.R;
 
@@ -26,7 +28,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     // child data in format of header title, child title
     private HashMap<String, List<String>> mListDataChild;
-    ExpandableListView expandList;
 
     public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<String>> listChildData) {
         this.mContext = context;
@@ -85,7 +86,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         /*final ImageView groupIco = (ImageView) convertView.findViewById(R.id.iconimage);
-        StorageReference iconRef = storage.child("Iconos/" + mListDataHeader.get(groupPosition).substring(0,3).toLowerCase() + ".png");
+        StorageReference iconRef = storage.child("Iconos/" + mListDataHeader.get(groupPosition).substring(0,4).toLowerCase() + ".png");
         iconRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(final Uri uri) {
@@ -102,7 +103,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 });
             }
         });*/
-        String uri = "@drawable/" + mListDataHeader.get(groupPosition).substring(0,4).toLowerCase();
+        String cst = removeSpecialCharacters(mListDataHeader.get(groupPosition).substring(0, 4).toLowerCase());
+        String uri = "@drawable/img_" + cst;
         int imageResource = mContext.getResources().getIdentifier(uri, null, mContext.getPackageName());
 
         final ImageView groupIco = (ImageView) convertView.findViewById(R.id.iconimage);
@@ -115,6 +117,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         lblListHeader.setText(headerTitle);
         return convertView;
     }
+
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
@@ -139,4 +142,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
+    //Función que elimina acentos y caracteres especiales de
+    // una cadena de texto.
+    public static String removeSpecialCharacters(String input) {
+        // Cadena de caracteres original a sustituir.
+        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇ";
+        // Cadena de caracteres ASCII que reemplazarán los originales.
+        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcC";
+        String output = input;
+        for (int i=0; i<original.length(); i++) {
+            // Reemplazamos los caracteres especiales.
+            output = output.replace(original.charAt(i), ascii.charAt(i));
+        }
+        return output;
+    }
+
 }

@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "504928013070",
-    "firebase_url": "https://fir-cards-c5267.firebaseio.com",
-    "project_id": "fir-cards-c5267",
-    "storage_bucket": "fir-cards-c5267.appspot.com"
+    "project_number": "883657793526",
+    "firebase_url": "https://intermareal-c1ae7.firebaseio.com",
+    "project_id": "intermareal-c1ae7",
+    "storage_bucket": "intermareal-c1ae7.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:504928013070:android:ddd755fe200a8264",
+        "mobilesdk_app_id": "1:883657793526:android:2efa904faa036cc1",
         "android_client_info": {
           "package_name": "tfg.uniovi.es.guiaintermareal"
         }
       },
       "oauth_client": [
         {
-          "client_id": "504928013070-ahdjrb3lcbqctc5175n0acc2unq8oqbu.apps.googleusercontent.com",
+          "client_id": "883657793526-cptg9c2ha1j285uchih3bg48pm415564.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAe7AlILmUkc-7Jz_lA2YPjc7wYZ3K8AB8"
+          "current_key": "AIzaSyDCM_zHlPxLgvFe8YwujVJhgvZmOxs4ZTQ"
         }
       ],
       "services": {

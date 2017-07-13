@@ -23,7 +23,6 @@ public class MapsActivity extends FragmentActivity implements LocationProvider.L
 
     public static final String TAG = MapsActivity.class.getSimpleName();
     private static final String GEO_REF_ROOT = "https://fir-cards-c5267.firebaseio.com";
-    private static String GEO_FIRE_REF;
 
     private GoogleMap mMap;
     private LocationProvider mLocationProvider;
@@ -73,7 +72,7 @@ public class MapsActivity extends FragmentActivity implements LocationProvider.L
 
         String ref = getIntent().getStringExtra("ref");
         String title = getIntent().getStringExtra("title");
-        GEO_FIRE_REF = GEO_REF_ROOT + "/" + ref + "/" +title;
+        String GEO_FIRE_REF = GEO_REF_ROOT + "/" + ref + "/" + title;
 
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();

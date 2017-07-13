@@ -36,7 +36,7 @@ public class CarouselAdapter extends PagerAdapter{
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == ((LinearLayout) object);
+        return view == object;
     }
 
     @Override
@@ -46,11 +46,9 @@ public class CarouselAdapter extends PagerAdapter{
         final ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
         ImageView.ScaleType st = ImageView.ScaleType.FIT_XY;
         imageView.setScaleType(st);
-        //Picasso.with(context).load(images.get(position)).into(imageView);
         Picasso.with(context).load(images.get(position)).networkPolicy(NetworkPolicy.OFFLINE).into(imageView, new Callback() {
             @Override
             public void onSuccess() {
-                //Nada que hacer aqui
             }
 
             @Override

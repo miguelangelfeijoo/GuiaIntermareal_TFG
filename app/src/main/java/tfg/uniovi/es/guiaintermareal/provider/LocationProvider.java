@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -48,7 +49,7 @@ public class LocationProvider implements
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                .setFastestInterval(1000); // 1 second, in milliseconds
 
         mContext = context;
     }
@@ -86,7 +87,7 @@ public class LocationProvider implements
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         /*
          * Google Play services can resolve some errors it detects.
          * If the error has a resolution, try sending an Intent to

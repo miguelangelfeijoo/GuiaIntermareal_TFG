@@ -80,8 +80,8 @@ public class SpecieListAdapter extends MainActivity {
         }
 
         private void loadSubcategoryData(String category, final String subcategory){
-            mCategoryTitle = category+ "/" +subcategory;
-            setCategoryRef("Categorias/" + mCategoryTitle);
+            mCategoryTitle = subcategory;
+            mCategoryRef = "Categorias/" + category + "/" + mCategoryTitle;
             myRef = database.getReference(mCategoryRef);
 
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -112,7 +112,6 @@ public class SpecieListAdapter extends MainActivity {
             Picasso.with(ctx).load(image).networkPolicy(NetworkPolicy.OFFLINE).into(post_image, new Callback() {
                 @Override
                 public void onSuccess() {
-                    //Nada que hacer aqui
                 }
 
                 @Override
@@ -120,10 +119,6 @@ public class SpecieListAdapter extends MainActivity {
                     Picasso.with(ctx).load(image).into(post_image);
                 }
             });
-        }
-
-        public void setCategoryRef(String ref){
-            mCategoryRef = ref;
         }
 
         public void setRecyclerAdapter(int count){

@@ -12,9 +12,11 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:contentDescription="@string/iconimage"
             android:paddingTop="10dp"
             android:id="@+id/iconimage"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="45dp"

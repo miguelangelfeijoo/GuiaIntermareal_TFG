@@ -1,21 +1,22 @@
 package tfg.uniovi.es.guiaintermareal;
 
+import android.*;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,7 +54,6 @@ import tfg.uniovi.es.guiaintermareal.adapter.SpecieListAdapter;
 import tfg.uniovi.es.guiaintermareal.model.Specie;
 import tfg.uniovi.es.guiaintermareal.ui.AboutActivity;
 import tfg.uniovi.es.guiaintermareal.ui.RuntimePermission;
-import tfg.uniovi.es.guiaintermareal.ui.SearchActivity;
 
 import static tfg.uniovi.es.guiaintermareal.ui.CategoryActivity.networkConnected;
 
@@ -62,7 +62,7 @@ public class MainActivity extends RuntimePermission{
     //**************************************************************************************************
     //                                      VAR DECLARATION
     //**************************************************************************************************
-    public static String mCategoryTitle = "Algas y Liquenes";
+    public static String mCategoryTitle = "Algas y líquenes";
     public static String mCategoryRef = "Categorias/";
 
     private static final int REQUEST_PERMISSION = 10;
@@ -81,6 +81,8 @@ public class MainActivity extends RuntimePermission{
     public StorageReference mStorage;
     FirebaseAuth mAuth;
     Uri picUri;
+
+    public static String dataType = "Category";
 
     private DrawerLayout mDrawer;
 
@@ -103,10 +105,11 @@ public class MainActivity extends RuntimePermission{
         toolbar.setTitle(mCategoryTitle);
         setSupportActionBar(toolbar);
 
+        //mAuth = FirebaseAuth.getInstance();
+
         mStorage = FirebaseStorage.getInstance().getReference();
         mProgressDialog = new ProgressDialog(this);
 
-        mAuth = FirebaseAuth.getInstance();
 
         requestAppPermissions(new String[]{
                         android.Manifest.permission.CAMERA,
@@ -129,7 +132,6 @@ public class MainActivity extends RuntimePermission{
         categoryRef.keepSynced(true);
         myRef.keepSynced(true);
 
-
         // ***** CARGAMOS LOS DATOS DEL DRAWER ******
         prepareDrawerListData();
 
@@ -142,7 +144,7 @@ public class MainActivity extends RuntimePermission{
                                         View view,
                                         int groupPosition,
                                         int childPosition, long id) {
-                loadSubcategoryData(String.valueOf(expandableListView.getItemAtPosition(groupPosition)),mMenuAdapter.getChild(groupPosition, childPosition).toString());
+                loadSubcategoryData(String.valueOf(listDataHeader.get(groupPosition)),mMenuAdapter.getChild(groupPosition, childPosition).toString());
                 expandableListView.collapseGroup(groupPosition);
                 mDrawer.closeDrawers();
                 return false;
@@ -152,13 +154,11 @@ public class MainActivity extends RuntimePermission{
         expandableList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long id) {
-                //if (!expandableListView.isGroupExpanded(groupPosition)) {
-                    //Expandido
-                    loadCategoryData(String.valueOf(expandableListView.getItemAtPosition(groupPosition)));
-                    if (listDataChild.get(expandableListView.getItemAtPosition(groupPosition)).isEmpty()){
+                    loadCategoryData(String.valueOf(listDataHeader.get(groupPosition)));
+                    if (listDataChild.get(listDataHeader.get(groupPosition)).isEmpty()){
                         mDrawer.closeDrawers();
                     }
-                //}
+                    expandableListView.collapseGroup(groupPosition);
                 return false;
             }
         });
@@ -173,21 +173,38 @@ public class MainActivity extends RuntimePermission{
     protected void onStart() {
         super.onStart();
 
-        FirebaseUser user = mAuth.getCurrentUser();
+        /*FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
             signInAnonymously();
-        }
+        }*/
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        setRecyclerAdapter();
-    }
 
-    private void signInAnonymously() {
+        if (dataType.equals("Subcategory")) {
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                int count;
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    count = (int) dataSnapshot.getChildrenCount();
+                    setRecyclerAdapter(count - 2);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }else {
+            setRecyclerAdapter();
+        }
+
+    }
+    /*private void signInAnonymously() {
         mAuth.signInAnonymously().addOnSuccessListener(this, new  OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
-                // do your stuff
             }
         })
                 .addOnFailureListener(this, new OnFailureListener() {
@@ -195,7 +212,7 @@ public class MainActivity extends RuntimePermission{
                     public void onFailure(@NonNull Exception exception) {
                     }
                 });
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -245,7 +262,7 @@ public class MainActivity extends RuntimePermission{
                     listDataHeader.add(dsp.getKey());
                     List<String> heading = new ArrayList<>();
                     for (DataSnapshot d : dsp.getChildren()) {
-                        String key = (String) d.getKey();
+                        String key = d.getKey();
                         if (! (d.hasChild("subcategory"))) {
                             if (!key.equals("subcategory") && !(key.equals("image")) && !(key.equals("title"))) {
                                 heading.add(d.getKey());
@@ -270,7 +287,7 @@ public class MainActivity extends RuntimePermission{
     //                                         ACTIONBAR MENU
     //**************************************************************************************************
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -294,6 +311,12 @@ public class MainActivity extends RuntimePermission{
             }
         });
         return true;
+    }*/
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
     @Override
@@ -301,11 +324,16 @@ public class MainActivity extends RuntimePermission{
         Intent intent;
         switch(item.getItemId()){
             case R.id.action_identify:
-                intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                File file=getOutputMediaFile(1);
-                picUri = Uri.fromFile(file); // create
-                intent.putExtra(MediaStore.EXTRA_OUTPUT,picUri); // set the image file
-                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                if((ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) &&
+                        (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+                    intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    File file = getOutputMediaFile(1);
+                    picUri = Uri.fromFile(file); // create
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, picUri); // set the image file
+                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                }else{
+                    Toast.makeText(getApplicationContext(), "Es necesario conceder los permisos para usar el botón!", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case R.id.action_about:
@@ -329,11 +357,12 @@ public class MainActivity extends RuntimePermission{
                 Uri uri;
                 //La imagen se obtiene de la camara
                 uri = picUri;
-                StorageReference filepath = mStorage.child("Identificame").child(uri.getLastPathSegment());
+                final StorageReference filepath = mStorage.child("Identificame").child(uri.getLastPathSegment());
                 filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(MainActivity.this, "Imagen subida con exito!", Toast.LENGTH_LONG).show();
+                        sendEmail(filepath.getName());
                         mProgressDialog.dismiss();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -343,11 +372,26 @@ public class MainActivity extends RuntimePermission{
                     }
                 });
             }
-
         }else{
             mProgressDialog.dismiss();
             Toast.makeText(MainActivity.this, "Es necesario tener conexion a Internet para subir la foto!!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void sendEmail(String imagen){
+
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:" + "intermareal.guia@gmail.com"));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Identificame");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Se ha enviado la imagen " + imagen + " " +
+                "para su identificacion");
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Confirma el envio por email usando..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(MainActivity.this, "No hay clientes de email instalados.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     /** Create a File for saving an image */
@@ -408,18 +452,20 @@ public class MainActivity extends RuntimePermission{
     }
 
     public void loadCategoryData(String title){
+        dataType = "Category";
         mCategoryTitle = title;
-        setCategoryRef("Categorias/" + mCategoryTitle);
-        myRef = database.getReference(getCategoryRef());
+        mCategoryRef = "Categorias/" + mCategoryTitle;
+        myRef = database.getReference(mCategoryRef);
 
         setToolbarTitle();
         setRecyclerAdapter();
     }
 
     public void loadSubcategoryData(String category, final String subcategory){
-        mCategoryTitle = category+ "/" +subcategory;
-        setCategoryRef("Categorias/" + mCategoryTitle);
-        myRef = database.getReference(getCategoryRef());
+        dataType = "Subcategory";
+        mCategoryTitle = subcategory;
+        mCategoryRef = "Categorias/" + category+ "/" + mCategoryTitle;
+        myRef = database.getReference(mCategoryRef);
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             int count;
@@ -447,14 +493,6 @@ public class MainActivity extends RuntimePermission{
     public void setToolbarTitle(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(mCategoryTitle);
-    }
-
-    /* Var access methods */
-    public String getCategoryRef(){
-        return mCategoryRef;
-    }
-    public void setCategoryRef(String ref){
-        mCategoryRef = ref;
     }
 
     //**************************************************************************************************

@@ -5,10 +5,10 @@ android {
     buildToolsVersion "24.0.0"
     defaultConfig {
         applicationId "tfg.uniovi.es.guiaintermareal"
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 6
+        versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

@@ -6,8 +6,8 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:paddingTop="50dp"
+        android:layout_height="200dp"
+        android:paddingTop="20dp"
         android:scaleType="fitCenter"
         android:contentDescription="@string/viewpager_ball"
         android:layout_alignParentTop="true"

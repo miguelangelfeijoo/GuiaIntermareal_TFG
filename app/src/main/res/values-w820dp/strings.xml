@@ -1,19 +1,42 @@
 <resources>
-    <string name="app_name">Guía Intermareal</string>
-    <string name="full_app_name">Guía de Fauna y Flora Intermareal</string>
-    <string name="university_name">Universidad de Oviedo</string>
+    <string name="app_name">Intermareal</string>
+    <string name="full_app_name">Guía de fauna y flora del intermareal rocoso cantábrico</string>
     <string name="navigation_drawer_open">Abrir drawer</string>
     <string name="navigation_drawer_close">Cerrar drawer</string>
     <string name="action_map">Ver Mapa</string>
 
-    <string name="title_activity_algas">Algas y Liquenes</string>
-    <string name="title_activity_anemonas">Esponjas, Anémonas y Corales</string>
-    <string name="title_activity_equinodermos">Equinodermos</string>
-    <string name="title_activity_moluscos">Moluscos</string>
-    <string name="title_activity_crustaceos">Crustáceos</string>
-    <string name="title_activity_anelidos">Anélidos</string>
-    <string name="title_activity_peces">Peces</string>
-
     <string name="ecologyLabel">Ecología</string>
     <string name="descriptionLabel">Descripción</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="category">Categorias</string>
+    <string name="identificar_especie">Identificar especie</string>
+
+    <string name="msg">Esta aplicación necesita permisos para su funcionamiento.</string>
+    <string name="habitatLabel">Nivel de marea</string>
+    <string name="taxonomyLabel">Taxonomía</string>
+    <string name="referencesLabel">Referencias</string>
+    <string name="action_search">Buscar especie</string>
+    <string name="action_about">Acerca de…</string>
+    <string name="exit_title">Salir</string>
+    <string name="exit_message">¿Está seguro de que quiere salir de la aplicación?</string>
+    <string name="imageViewyDescription">Specie background image for RecyclerView</string>
+    <string name="department">Informática y Biología de Organismos y Sistemas</string>
+    <string name="university">Universidad de Oviedo</string>
+    <string name="colaboration">Proyecto en colaboración con el departamento de Biología</string>
+    <string name="createdBy"><![CDATA[<Diseño & Desarrollo>]]></string>
+    <string name="developerName">Miguel Ángel Feijoo Diéguez</string>
+    <string name="information"><![CDATA[<Documentación>]]></string>
+    <string name="infoBy">Noelia Carpio Enriqueta</string>
+    <string name="appDescription">Guía para móviles de la fauna y flora del intermareal rocoso cantábrico</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="sizeLabel">Tamaño</string>
+
+    <string name="search_view_hint">Búsqueda por habitat…</string>
+    <string name="viewpager_ball">viewPager_ball</string>
+    <string name="imagehabitat">imageHabitat</string>
+    <string name="iconcamera">iconCamera</string>
+    <string name="icongallery">icongallery</string>
+    <string name="iconexit">iconexit</string>
+    <string name="iconimage">iconimage</string>
+
 </resources>
